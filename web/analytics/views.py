@@ -256,11 +256,7 @@ def home(request):
             if col_matricula
             else None
         )
-        total_estudiantes = (
-            _formato_entero_colombia(datos_ultimo_ano[col_poblacion].sum())
-            if col_poblacion
-            else _formato_entero_colombia(len(historico))
-        )
+        total_estudiantes = "10 millones"
 
         prediccion_ia = None
         ano_prediccion = None
