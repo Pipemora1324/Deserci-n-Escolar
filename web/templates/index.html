@@ -141,32 +141,17 @@
             margin-bottom: 14px;
         }
 
-        .risk-table {
+        .powerbi-reading {
             background: white;
             border: 1px solid #dfe5ee;
+            padding: 34px;
+            height: 100%;
         }
 
-        .risk-row {
-            display: grid;
-            grid-template-columns: 1.4fr 0.7fr 0.7fr;
-            gap: 14px;
-            padding: 16px 20px;
-            border-bottom: 1px solid #edf0f5;
-            align-items: center;
-        }
-
-        .risk-row:last-child {
-            border-bottom: 0;
-        }
-
-        .risk-row:hover {
-            background: #f7fbff;
-        }
-
-        .risk-value {
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 700;
-            color: var(--accent-red);
+        .powerbi-fact {
+            border-left: 4px solid var(--primary-navy);
+            padding-left: 18px;
+            margin-top: 22px;
         }
 
         .method-note {
@@ -182,10 +167,6 @@
         }
 
         @media (max-width: 768px) {
-            .risk-row {
-                grid-template-columns: 1fr;
-            }
-
             .metric-value {
                 font-size: 2.1rem;
             }
@@ -331,19 +312,20 @@
     <section class="container pb-5">
         <div class="row g-4 align-items-stretch">
             <div class="col-lg-7">
-                <div class="risk-table">
-                    <div class="risk-row bg-light fw-bold text-uppercase small text-muted">
-                        <span>Departamento priorizado</span>
-                        <span>Deserción {{ ultimo_ano }}</span>
-                        <span>Matrícula 5-16</span>
+                <div class="powerbi-reading">
+                    <div class="policy-kicker mb-2">Lectura Power BI</div>
+                    <h3 class="fw-bold mb-3">La deserción alta también es una alerta social.</h3>
+                    <p class="text-muted">El tablero muestra que el promedio nacional de deserción en {{ ultimo_ano }} es {{ promedio }}%, pero algunos territorios se ubican muy por encima de esa referencia. El caso más crítico en el último periodo es {{ depto_critico }}, con {{ valor_depto_critico }}%.</p>
+                    <p class="text-muted mb-0">Cuando un estudiante abandona el sistema educativo aumenta su exposición a trayectorias de informalidad, baja empleabilidad y vulnerabilidad frente a economías ilegales o violencia territorial. Por eso el dato no debe leerse solo como matrícula perdida, sino como una señal temprana para activar permanencia, acompañamiento psicosocial, transporte y conectividad.</p>
+
+                    <div class="powerbi-fact">
+                        <strong>Dato del modelo:</strong>
+                        <span class="text-muted">la IA proyecta {{ prediccion_ia }}% para {{ ano_prediccion }} y usa un margen técnico de +/-{{ margen_modelo }} puntos para separar riesgo, estabilidad y resultados favorables.</span>
                     </div>
-                    {% for item in top_riesgo %}
-                    <div class="risk-row">
-                        <span class="fw-bold">{{ item.departamento }}</span>
-                        <span class="risk-value">{{ item.desercion }}%</span>
-                        <span class="text-muted">{{ item.matricula }}%</span>
+                    <div class="powerbi-fact">
+                        <strong>Dato del tablero:</strong>
+                        <span class="text-muted">{{ depto_destacado }} aparece con la deserción más baja del último periodo: {{ valor_depto_destacado }}%. Ese comportamiento sirve como referencia para comparar territorios con mayor presión de abandono.</span>
                     </div>
-                    {% endfor %}
                 </div>
             </div>
             <div class="col-lg-5">
@@ -351,7 +333,8 @@
                     <div class="policy-kicker mb-2">Lectura del modelo</div>
                     <h3 class="fw-bold mb-3">La IA funciona como un semáforo técnico.</h3>
                     <p>El sistema no inventa conclusiones: toma la deserción real de {{ ultimo_ano }}, la compara contra la proyección nacional de {{ prediccion_ia }}% para {{ ano_prediccion }} y clasifica cada territorio con un margen de +/-{{ margen_modelo }} puntos.</p>
-                    <p class="mb-0"><strong>Uso esperado:</strong> priorizar acompañamiento, becas, transporte, conectividad o alertas tempranas en los departamentos que superan el umbral de riesgo.</p>
+                    <p>La lectura correcta es preventiva: una deserción baja indica mayor permanencia escolar; una deserción alta señala estudiantes fuera del sistema y mayor necesidad de intervención institucional.</p>
+                    <p class="mb-0"><strong>Uso esperado:</strong> priorizar acompañamiento, becas, transporte, conectividad, alertas tempranas y rutas psicosociales en los departamentos que superan el umbral de riesgo.</p>
                 </div>
             </div>
         </div>
