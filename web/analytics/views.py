@@ -165,12 +165,31 @@ def _diagnostico_desercion(desviacion, margen):
 
 # ── ANOVA helpers ─────────────────────────────────────────────────────────────
 
-PLOT_BG      = '#FFFFFF'
-PLOT_SURFACE = '#F4F6F9'
-PLOT_BORDER  = '#DDE3EA'
-PLOT_TEXT    = '#1A1A2E'
-PLOT_TEXT_SEC = '#5A6A7A'
-PALETTE = ['#003366', '#B22222', '#F5A623', '#1B7A4A', '#5B8DB8', '#8B1A1A', '#C8860A']
+PLOT_BG       = '#FFFFFF'
+PLOT_SURFACE  = '#F7F9FC'
+PLOT_BORDER   = '#E2E8F0'
+PLOT_TEXT     = '#1C2B3A'
+PLOT_TEXT_SEC = '#607080'
+
+COLORES_INST = {
+    'Andina':        '#003580',
+    'Caribe':        '#C8102E',
+    'Amazonia':      '#8B0000',
+    'Pacífica':      '#1B7A4A',
+    'Orinoquia':     '#FFC72C',
+    'Transición':    '#003580',
+    'Primaria':      '#1B7A4A',
+    'Secundaria':    '#C8102E',
+    'Media':         '#FFC72C',
+    'Pre-pandemia':  '#003580',
+    'Pandemia':      '#C8102E',
+    'Post-pandemia': '#FFC72C',
+}
+_PALETTE_FALLBACK = ['#003580', '#C8102E', '#1B7A4A', '#FFC72C', '#607080', '#8B0000']
+
+def _get_colors(group_names):
+    return [COLORES_INST.get(n, _PALETTE_FALLBACK[i % len(_PALETTE_FALLBACK)])
+            for i, n in enumerate(group_names)]
 
 
 def _setup_fig(figsize=(11, 6)):
@@ -200,11 +219,11 @@ def _fig_to_b64(fig):
 
 def _boxplot_b64(groups_data, group_names, title, ylabel):
     fig, ax = _setup_fig()
-    colors = PALETTE[:len(group_names)]
+    colors = _get_colors(group_names)
     bp = ax.boxplot(
         groups_data, patch_artist=True,
         labels=group_names, widths=0.55,
-        medianprops=dict(color='#FFFFFF', linewidth=2),
+        medianprops=dict(color=PLOT_TEXT, linewidth=2),
         whiskerprops=dict(color=PLOT_TEXT_SEC),
         capprops=dict(color=PLOT_TEXT_SEC),
         flierprops=dict(marker='o', markerfacecolor=PLOT_TEXT_SEC,
@@ -212,13 +231,13 @@ def _boxplot_b64(groups_data, group_names, title, ylabel):
     )
     for patch, color in zip(bp['boxes'], colors):
         patch.set_facecolor(color)
-        patch.set_alpha(0.82)
+        patch.set_alpha(0.75)
         patch.set_edgecolor(color)
 
     for i, (data, color) in enumerate(zip(groups_data, colors), start=1):
         mn = np.nanmean(data)
         ax.plot(i, mn, 'D', color='white', markersize=6, zorder=5,
-                markeredgecolor=color, markeredgewidth=1.5)
+                markeredgecolor=PLOT_TEXT, markeredgewidth=1.2)
 
     ax.set_title(title, fontsize=13, pad=14, color=PLOT_TEXT, fontweight='bold')
     ax.set_ylabel(ylabel, color=PLOT_TEXT, fontsize=10)
@@ -230,15 +249,15 @@ def _boxplot_b64(groups_data, group_names, title, ylabel):
 def _barplot_b64(group_names, means, stds, title, ylabel):
     fig, ax = _setup_fig()
     x = range(len(group_names))
-    colors = PALETTE[:len(group_names)]
+    colors = _get_colors(group_names)
     bars = ax.bar(x, means, color=colors, alpha=0.88, edgecolor='white',
                   width=0.55, zorder=3, linewidth=0.8)
     ax.errorbar(x, means, yerr=stds, fmt='none', color=PLOT_TEXT_SEC,
                 capsize=5, capthick=1.5, elinewidth=1.5, zorder=4)
     for bar, mean in zip(bars, means):
-        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.05,
+        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.06,
                 f'{mean:.2f}%', ha='center', va='bottom',
-                color=PLOT_TEXT, fontfamily='monospace', fontsize=9)
+                color=PLOT_TEXT, fontfamily='monospace', fontsize=9, fontweight='bold')
     ax.set_xticks(list(x))
     ax.set_xticklabels(group_names, rotation=10, ha='right', color=PLOT_TEXT, fontsize=9)
     ax.set_title(title, fontsize=13, pad=14, color=PLOT_TEXT, fontweight='bold')
@@ -401,21 +420,33 @@ def home(request):
         fila_critica = datos_ranking.iloc[0]
         fila_destacada = datos_ranking.iloc[-1]
 
-        top5_rows = datos_ranking.head(5)
-        max_d = float(top5_rows[col_desercion].max()) if not top5_rows.empty else 1.0
+        # Top 5 usando promedio histórico (más representativo)
+        dept_avg = historico.groupby(col_departamento)[col_desercion].mean()
+        top5_depts = dept_avg.sort_values(ascending=False).head(5)
+        max_d = float(top5_depts.iloc[0]) if not top5_depts.empty else 1.0
         top_riesgo = []
-        for _, fila in top5_rows.iterrows():
-            val = float(fila[col_desercion])
+        for dept_name, val in top5_depts.items():
+            val = float(val)
+            last_dept = datos_ultimo_ano[datos_ultimo_ano[col_departamento] == dept_name]
+            mat = "N/D"
+            if col_matricula and not last_dept.empty:
+                m_vals = last_dept[col_matricula].dropna()
+                if not m_vals.empty:
+                    mat = _formato_numero(float(m_vals.iloc[0]))
             top_riesgo.append({
-                "departamento": fila[col_departamento],
+                "departamento": dept_name,
                 "desercion": _formato_numero(val),
                 "bar_pct": round(val / max(max_d, 0.01) * 90, 1),
-                "matricula": (
-                    _formato_numero(fila[col_matricula])
-                    if col_matricula and not pd.isna(fila[col_matricula])
-                    else "N/D"
-                ),
+                "matricula": mat,
             })
+
+        # Nariño en contexto nacional
+        narino_rows = historico[historico[col_departamento].str.contains('ARI', na=False)]
+        narino_avg = _formato_numero(float(narino_rows[col_desercion].mean())) \
+            if not narino_rows.empty else "N/D"
+        narino_ultimo = narino_rows[narino_rows[col_ano] == ultimo_ano][col_desercion]
+        narino_ultimo_val = _formato_numero(float(narino_ultimo.mean())) \
+            if not narino_ultimo.empty else narino_avg
 
         ia_insights = {
             "General": (
@@ -481,6 +512,8 @@ def home(request):
             "top_riesgo": top_riesgo,
             "ia_insights_json": _json_para_template(ia_insights),
             "departamentos": departamentos,
+            "narino_avg": narino_avg,
+            "narino_ultimo": narino_ultimo_val,
             "powerbi_filter_table": "master_data_final",
             "powerbi_filter_field": "Ubicacion Completa",
             "powerbi_embed_url": "https://app.powerbi.com/view?r=eyJrIjoiNWU2NzJmZGUtNTIwNi00MmY2LWE0NzUtYzVkMzgwNTk5YmY4IiwidCI6IjhkMzY4MzZlLTZiNzUtNGRlNi1iYWI5LTVmNGIxNzc1NDI3ZiIsImMiOjR9",
@@ -698,8 +731,6 @@ def anova_view(request):
         print(traceback.format_exc())
         return render(request, 'anova.html', {'error': f'Error al ejecutar el análisis: {exc}'})
 
-
-# ── chatbot views ─────────────────────────────────────────────────────────────
 
 def metodologia(request):
     return render(request, 'metodologia.html')

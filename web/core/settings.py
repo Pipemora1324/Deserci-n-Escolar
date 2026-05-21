@@ -6,8 +6,6 @@ Configurado para el Proyecto de Deserción Escolar - UCC Pasto
 from pathlib import Path
 import os
 
-ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

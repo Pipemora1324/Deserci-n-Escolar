@@ -1,193 +1,173 @@
 {% extends 'base.html' %}
-
 {% block title %}Sistema de Analítica para la Deserción Escolar | Colombia{% endblock %}
-{% block nav_home %}active{% endblock %}
+{% block nav_inicio %}active{% endblock %}
 
 {% block extra_styles %}
-/* ── HERO ───────────────────────────────────────── */
-.inst-hero {
-    background: linear-gradient(135deg, #002244 0%, #003d7a 60%, #004a8f 100%);
+/* ── HERO ─────────────────────────────────────────── */
+.hero {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, #004a9f 100%);
     padding: 4.5rem 0 3.5rem;
     position: relative;
     overflow: hidden;
 }
-
-.inst-hero::before {
+.hero::before {
     content: '';
     position: absolute;
     inset: 0;
     background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 41px),
-        repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 41px);
+        repeating-linear-gradient(0deg, transparent, transparent 48px, rgba(255,255,255,0.025) 48px, rgba(255,255,255,0.025) 49px),
+        repeating-linear-gradient(90deg, transparent, transparent 48px, rgba(255,255,255,0.025) 48px, rgba(255,255,255,0.025) 49px);
     pointer-events: none;
 }
-
 .hero-badge {
-    display: inline-block;
-    background: rgba(245,166,35,0.15);
-    border: 1px solid rgba(245,166,35,0.4);
-    color: #F5A623;
-    padding: 0.3rem 1rem;
-    border-radius: 3px;
-    font-size: 0.74rem;
+    background: rgba(255,199,44,0.15);
+    border: 1px solid rgba(255,199,44,0.4);
+    color: #FFC72C;
+    padding: 0.28rem 0.9rem;
+    border-radius: 4px;
+    font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-family: var(--mono);
-    margin-bottom: 1.2rem;
+    display: inline-block;
+    margin-bottom: 1.1rem;
 }
-
-.hero-title {
+.hero h1 {
     font-family: var(--serif);
-    font-size: clamp(1.6rem, 3.5vw, 2.6rem);
-    font-weight: 700;
+    font-size: clamp(1.7rem, 3.5vw, 2.7rem);
     color: white;
     line-height: 1.25;
     margin-bottom: 1rem;
 }
-
-.hero-title span { color: #F5A623; }
-
+.hero h1 em { color: #FFC72C; font-style: normal; }
 .hero-sub {
     color: rgba(255,255,255,0.78);
     font-size: 1rem;
-    max-width: 560px;
+    max-width: 540px;
     line-height: 1.7;
-    margin-bottom: 2rem;
+    margin-bottom: 0.75rem;
 }
-
-.hero-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
-
-.btn-hero-primary {
+.hero-meta {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 1.8rem;
+    letter-spacing: 0.3px;
+}
+.btn-hero {
     background: white;
     color: var(--primary) !important;
     font-weight: 700;
     padding: 0.65rem 1.6rem;
-    border-radius: 4px;
+    border-radius: 6px;
     text-decoration: none;
     font-size: 0.9rem;
     transition: background 0.15s;
     display: inline-block;
 }
-.btn-hero-primary:hover { background: #f0f4f8; }
-
-.btn-hero-outline {
+.btn-hero:hover { background: #EBF0FB; }
+.btn-hero-ghost {
     background: transparent;
     color: rgba(255,255,255,0.9) !important;
-    border: 1.5px solid rgba(255,255,255,0.4);
-    padding: 0.65rem 1.4rem;
-    border-radius: 4px;
+    border: 1.5px solid rgba(255,255,255,0.35);
+    padding: 0.65rem 1.5rem;
+    border-radius: 6px;
     text-decoration: none;
     font-size: 0.9rem;
-    transition: border-color 0.15s, color 0.15s;
+    transition: border-color 0.15s;
     display: inline-block;
 }
-.btn-hero-outline:hover {
-    border-color: white;
-    color: white !important;
-}
+.btn-hero-ghost:hover { border-color: white; color: white !important; }
 
-/* ── KPI STRIP ──────────────────────────────────── */
+/* ── KPI STRIP ─────────────────────────────────────── */
 .kpi-strip {
-    padding: 2.5rem 0;
-    border-bottom: 1px solid var(--border);
     background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 6px rgba(0,53,128,0.06);
 }
-
-.kpi-card {
+.kpi-cell {
+    padding: 1.6rem 1.2rem;
     text-align: center;
-    padding: 1.5rem 1rem;
     border-right: 1px solid var(--border);
 }
-.kpi-card:last-child { border-right: none; }
+.kpi-cell:last-child { border-right: none; }
+.kpi-accent {
+    display: block;
+    width: 32px; height: 3px;
+    border-radius: 2px;
+    margin: 0.5rem auto 0;
+}
 
-.kpi-accent { display: block; width: 36px; height: 3px; margin: 0.6rem auto 0; border-radius: 2px; }
-
-/* ── HALLAZGOS ───────────────────────────────────── */
+/* ── HALLAZGOS ─────────────────────────────────────── */
 .hallazgo-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-top: 3px solid var(--primary);
-    border-radius: 4px;
+    border-radius: var(--radius);
     padding: 1.5rem;
     height: 100%;
     box-shadow: var(--shadow);
     transition: transform 0.2s, box-shadow 0.2s;
 }
-.hallazgo-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
+.hallazgo-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.hallazgo-card.red  { border-top-color: var(--accent); }
+.hallazgo-card.gold { border-top-color: var(--yellow); }
 .hallazgo-icon {
-    width: 44px; height: 44px;
-    background: rgba(0,51,102,0.08);
-    border-radius: 4px;
+    width: 42px; height: 42px;
+    background: var(--primary-soft);
+    border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     margin-bottom: 1rem;
-    flex-shrink: 0;
 }
+.hallazgo-stat {
+    font-family: var(--mono);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+}
+.hallazgo-stat.red  { color: var(--accent); }
+.hallazgo-stat.gold { color: #9A7000; }
 
-/* ── QUICK NAV ───────────────────────────────────── */
-.quick-link-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--primary);
-    border-radius: 4px;
-    padding: 1.2rem 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    text-decoration: none;
-    box-shadow: var(--shadow);
-    transition: border-left-color 0.15s, box-shadow 0.15s;
-    height: 100%;
-}
-.quick-link-card:hover {
-    border-left-color: var(--secondary);
-    box-shadow: var(--shadow-md);
-    text-decoration: none;
-}
-.quick-link-card h6 { color: var(--primary); font-weight: 700; margin: 0 0 0.2rem; font-size: .95rem; }
-.quick-link-card p  { color: var(--text-muted); font-size: .82rem; margin: 0; }
-
-/* ── TOP RIESGO ─────────────────────────────────── */
-.riesgo-bar-wrap {
-    background: #EFF2F7;
-    height: 4px;
-    border-radius: 2px;
-    margin-top: 0.35rem;
+/* ── TOP 5 ─────────────────────────────────────────── */
+.riesgo-bar-track {
+    background: var(--border);
+    height: 5px;
+    border-radius: 3px;
+    margin-top: 0.4rem;
     overflow: hidden;
 }
 .riesgo-bar-fill {
     height: 100%;
-    background: var(--secondary);
-    border-radius: 2px;
-    transition: width 0.8s ease;
+    background: var(--accent);
+    border-radius: 3px;
 }
-.rank-num {
+.rank-badge {
     font-family: var(--mono);
-    font-size: 0.7rem;
+    font-size: 0.68rem;
+    font-weight: 600;
     color: var(--text-muted);
-    min-width: 18px;
+    min-width: 20px;
 }
-.desercion-val {
+.desercion-pct {
     font-family: var(--mono);
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--secondary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent);
 }
 
-/* ── INSIGHTS / CONSULTOR ───────────────────────── */
+/* ── CONSULTOR ─────────────────────────────────────── */
 .consultor-box {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-left: 4px solid var(--primary);
-    border-radius: 4px;
-    padding: 1.5rem;
+    border-radius: var(--radius);
+    padding: 1.4rem;
     box-shadow: var(--shadow);
-    min-height: 160px;
+    min-height: 140px;
 }
 .consultor-label {
     font-size: 0.68rem;
@@ -195,42 +175,46 @@
     letter-spacing: 1.5px;
     color: var(--text-muted);
     font-family: var(--mono);
-    margin-bottom: 0.5rem;
-}
-.consultor-text {
-    font-size: 0.9rem;
-    line-height: 1.65;
-    color: var(--text);
+    margin-bottom: 0.6rem;
 }
 
-/* ── DASHBOARD SECTION ───────────────────────────── */
-.dashboard-section {
+/* ── NARINO ────────────────────────────────────────── */
+.narino-card {
+    background: var(--primary);
+    color: white;
+    border-radius: var(--radius);
+    padding: 2rem;
+}
+.narino-stat {
+    font-family: var(--mono);
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: #FFC72C;
+    line-height: 1;
+}
+
+/* ── DASHBOARD SECTION ─────────────────────────────── */
+.dash-section {
+    background: var(--bg-section);
     padding: 4rem 0;
-    border-top: 1px solid var(--border);
-    background: var(--bg-card);
 }
 .iframe-wrap {
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: var(--radius);
     overflow: hidden;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-md);
+    background: white;
 }
 
-/* ── SOBRE EL PROYECTO ───────────────────────────── */
-.sobre-section {
-    background: var(--primary);
-    color: white;
-    padding: 4rem 0;
-}
-.sobre-section h2 { font-family: var(--serif); color: white; }
-.sobre-section p  { color: rgba(255,255,255,0.82); }
+/* ── SOBRE EL PROYECTO ─────────────────────────────── */
+.about-section { background: var(--bg-section); padding: 4rem 0; }
 
-/* ── ALERT HALLAZGO ──────────────────────────────── */
-.hallazgo-alert {
-    background: rgba(178,34,34,0.05);
-    border: 1px solid rgba(178,34,34,0.2);
-    border-left: 4px solid var(--secondary);
-    border-radius: 4px;
+/* ── HALLAZGO ALERTA ───────────────────────────────── */
+.alert-hallazgo {
+    background: white;
+    border: 1px solid rgba(200,16,46,0.2);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius);
     padding: 1rem 1.2rem;
     font-size: 0.88rem;
 }
@@ -238,62 +222,56 @@
 
 {% block content %}
 
-<!-- ── BANNER INSTITUCIONAL ──────────────────────────────────────── -->
-<div style="background:#F5A623;padding:.45rem 2rem;text-align:center;font-size:.78rem;font-weight:700;color:#1A1A2E;letter-spacing:.3px">
-    🇨🇴 &nbsp; Concurso Datos al Ecosistema 2026 &nbsp;·&nbsp; Ministerio de TIC &nbsp;·&nbsp;
-    <a href="https://www.datos.gov.co" target="_blank" style="color:#003366;text-decoration:underline">datos.gov.co</a>
-    &nbsp;·&nbsp; Universidad Cooperativa de Colombia
+<!-- BANNER DORADO -->
+<div style="background:var(--yellow);padding:.42rem 2rem;text-align:center;font-size:.78rem;font-weight:700;color:var(--primary-dark)">
+    🇨🇴 &nbsp; Concurso <strong>Datos al Ecosistema 2026</strong> &nbsp;·&nbsp;
+    Ministerio de TIC de Colombia &nbsp;·&nbsp;
+    <a href="https://www.datos.gov.co" target="_blank"
+       style="color:var(--primary-dark);text-decoration:underline">datos.gov.co</a>
 </div>
 
-<!-- ── HERO INSTITUCIONAL ────────────────────────────────────────── -->
-<section class="inst-hero">
+<!-- HERO -->
+<section class="hero">
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-7">
                 <div class="hero-badge">
-                    <i class="fa-solid fa-chart-line me-1"></i>
-                    Datos al Ecosistema 2026
+                    <i class="fa-solid fa-chart-line me-1"></i>Datos al Ecosistema 2026
                 </div>
-                <h1 class="hero-title">
+                <h1>
                     Sistema de Analítica para la<br>
-                    <span>Deserción Escolar en Colombia</span>
+                    <em>Deserción Escolar en Colombia</em>
                 </h1>
                 <p class="hero-sub">
                     Análisis estadístico de registros oficiales del Ministerio de Educación Nacional
                     para identificar patrones territoriales, brechas por nivel educativo e impacto
                     de la pandemia en la permanencia escolar colombiana.
                 </p>
-                <p style="font-size:.8rem;color:rgba(255,255,255,.55);margin-bottom:1.5rem;font-family:var(--mono)">
-                    {{ total_registros }} registros &nbsp;·&nbsp;
-                    {{ total_departamentos }} departamentos &nbsp;·&nbsp;
-                    Período {{ periodo_analizado }}
+                <p class="hero-meta">
+                    462 registros históricos &nbsp;·&nbsp;
+                    33 departamentos &nbsp;·&nbsp;
+                    Período 2011–2024 &nbsp;·&nbsp;
+                    ANOVA + Tukey HSD · Power BI
                 </p>
-                <div class="hero-cta">
-                    <a href="#dashboard" class="btn-hero-primary">
-                        <i class="fa-solid fa-chart-bar me-2"></i>Ver Dashboard Interactivo
-                    </a>
-                    <a href="/anova/" class="btn-hero-outline">
-                        <i class="fa-solid fa-flask me-2"></i>Análisis Estadístico
-                    </a>
-                    <a href="/metodologia/" class="btn-hero-outline">
-                        <i class="fa-solid fa-book me-2"></i>Metodología
-                    </a>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="#dashboard"    class="btn-hero"><i class="fa-solid fa-chart-bar me-2"></i>Ver Dashboard</a>
+                    <a href="/anova/"       class="btn-hero-ghost"><i class="fa-solid fa-flask me-2"></i>Análisis ANOVA</a>
+                    <a href="/metodologia/" class="btn-hero-ghost"><i class="fa-solid fa-book me-2"></i>Metodología</a>
                 </div>
             </div>
             <div class="col-lg-5">
-                <div class="hallazgo-alert">
-                    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem">
-                        <i class="fa-solid fa-triangle-exclamation" style="color:var(--secondary)"></i>
-                        <strong style="font-size:.78rem;text-transform:uppercase;letter-spacing:.3px;color:var(--secondary)">
+                <div class="alert-hallazgo">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="fa-solid fa-triangle-exclamation c-accent"></i>
+                        <strong style="font-size:.76rem;text-transform:uppercase;letter-spacing:.3px;color:var(--accent)">
                             Hallazgo crítico
                         </strong>
                     </div>
-                    <p style="margin:0;color:var(--text);font-size:.9rem">
+                    <p style="margin:0;font-size:.9rem;color:var(--text-main)">
                         El promedio nacional de <strong>{{ promedio }}%</strong> en {{ ultimo_ano }}
-                        encubre disparidades territoriales severas.
-                        <strong>{{ depto_critico }}</strong> registra <strong>{{ valor_depto_critico }}%</strong>,
-                        mientras que <strong>{{ depto_destacado }}</strong> llega a apenas
-                        <strong>{{ valor_depto_destacado }}%</strong>.
+                        encubre disparidades severas. <strong>Guainía (6.86%)</strong> y
+                        <strong>Vichada (6.80%)</strong> registran casi el doble que el promedio.
+                        La región Amazónica supera en +1.84 p.p. al promedio nacional.
                     </p>
                 </div>
             </div>
@@ -301,91 +279,99 @@
     </div>
 </section>
 
-<!-- ── KPI STRIP ─────────────────────────────────────────────────── -->
+<!-- KPIs -->
 <section class="kpi-strip">
     <div class="container">
         <div class="row g-0">
             <div class="col-6 col-md-3">
-                <div class="kpi-card">
-                    <div class="kpi-value" id="kpi-prom">{{ promedio }}%</div>
-                    <div class="kpi-label">Tasa deserción nacional</div>
-                    <span class="kpi-accent" style="background:var(--secondary)"></span>
+                <div class="kpi-cell">
+                    <div class="kpi-num" style="color:var(--accent)">4.07%</div>
+                    <div class="kpi-label">Deserción promedio<br>nacional histórica</div>
+                    <span class="kpi-accent" style="background:var(--accent)"></span>
                 </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="kpi-card">
-                    <div class="kpi-value">10M+</div>
-                    <div class="kpi-label">Estudiantes analizados</div>
+                <div class="kpi-cell">
+                    <div class="kpi-num">33</div>
+                    <div class="kpi-label">Departamentos<br>analizados</div>
                     <span class="kpi-accent" style="background:var(--primary)"></span>
                 </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="kpi-card">
-                    <div class="kpi-value">{{ total_departamentos }}</div>
-                    <div class="kpi-label">Departamentos cubiertos</div>
+                <div class="kpi-cell">
+                    <div class="kpi-num" style="font-size:1.9rem">2011–2024</div>
+                    <div class="kpi-label">Período histórico<br>analizado</div>
                     <span class="kpi-accent" style="background:var(--success)"></span>
                 </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="kpi-card">
-                    <div class="kpi-value mono" style="font-size:1.9rem">2011–2024</div>
-                    <div class="kpi-label">Período de análisis</div>
-                    <span class="kpi-accent" style="background:var(--accent)"></span>
+                <div class="kpi-cell">
+                    <div class="kpi-num">462</div>
+                    <div class="kpi-label">Registros<br>históricos</div>
+                    <span class="kpi-accent" style="background:var(--yellow)"></span>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ── HALLAZGOS PRINCIPALES ─────────────────────────────────────── -->
-<section class="py-5" style="border-bottom:1px solid var(--border)">
+<!-- HALLAZGOS PRINCIPALES -->
+<section class="py-5" style="background:var(--bg-section);border-bottom:1px solid var(--border)">
     <div class="container">
-        <div class="section-eyebrow">Resultados del análisis ANOVA</div>
-        <h2 class="section-title">Hallazgos principales</h2>
-        <p class="section-sub mb-4">
-            Tres patrones estadísticamente significativos identificados mediante pruebas ANOVA
-            sobre los datos oficiales del Ministerio de Educación Nacional (α = 0.05).
+        <div class="sec-eyebrow">Resultados del análisis ANOVA (α = 0.05)</div>
+        <h2 class="sec-title mb-1">Hallazgos principales</h2>
+        <p class="sec-sub mb-4">
+            Tres patrones estadísticamente significativos sobre 462 registros reales del Ministerio de Educación Nacional.
         </p>
         <div class="row g-3">
             <div class="col-md-4">
                 <div class="hallazgo-card">
                     <div class="hallazgo-icon">📍</div>
-                    <h5 style="font-family:var(--serif);font-weight:700;color:var(--primary);font-size:1rem;margin-bottom:.5rem">
-                        Concentración territorial
-                    </h5>
-                    <p style="font-size:.88rem;color:var(--text-muted);margin:0">
-                        La región Amazónica concentra la mayor tasa de deserción
-                        (<strong style="color:var(--secondary)">5.91%</strong> promedio), estadísticamente
-                        superior al resto de regiones (F=49.08, p&lt;0.001). Dispersión geográfica
-                        y baja conectividad son factores determinantes.
+                    <div class="hallazgo-stat">5.91%</div>
+                    <div style="font-size:.7rem;color:var(--text-muted);font-family:var(--mono);margin-bottom:.6rem">
+                        Deserción promedio — Amazonia
+                    </div>
+                    <h6 style="font-family:var(--serif);color:var(--primary);font-weight:700;font-size:.95rem;margin-bottom:.5rem">
+                        La Amazonia: zona de mayor riesgo
+                    </h6>
+                    <p style="font-size:.85rem;color:var(--text-muted);margin:0">
+                        La región Amazónica supera en <strong>+1.84 p.p.</strong> el promedio nacional.
+                        Guainía (6.86%), Vichada (6.80%), Putumayo (6.14%), Caquetá (6.12%) y Vaupés (6.05%)
+                        concentran los índices más altos. ANOVA: <span class="mono">F=49.08, p&lt;0.001</span>.
                     </p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="hallazgo-card" style="border-top-color:var(--secondary)">
-                    <div class="hallazgo-icon" style="background:rgba(178,34,34,.08)">📚</div>
-                    <h5 style="font-family:var(--serif);font-weight:700;color:var(--primary);font-size:1rem;margin-bottom:.5rem">
-                        Nivel crítico: Secundaria
-                    </h5>
-                    <p style="font-size:.88rem;color:var(--text-muted);margin:0">
-                        La educación secundaria registra la mayor tasa de deserción
-                        (<strong style="color:var(--secondary)">5.10%</strong>), mientras la primaria
-                        la menor (3.42%). El ANOVA detecta diferencias significativas entre todos
-                        los niveles (F=58.24, p&lt;0.001).
+                <div class="hallazgo-card red">
+                    <div class="hallazgo-icon" style="background:rgba(200,16,46,.08)">📚</div>
+                    <div class="hallazgo-stat red">5.10%</div>
+                    <div style="font-size:.7rem;color:var(--text-muted);font-family:var(--mono);margin-bottom:.6rem">
+                        Deserción Secundaria vs 3.42% Primaria
+                    </div>
+                    <h6 style="font-family:var(--serif);color:var(--primary);font-weight:700;font-size:.95rem;margin-bottom:.5rem">
+                        Secundaria: el nivel más crítico
+                    </h6>
+                    <p style="font-size:.85rem;color:var(--text-muted);margin:0">
+                        La deserción en secundaria (5.10%) es <strong>+1.68 p.p.</strong> mayor que en primaria (3.42%).
+                        La transición entre ciclos es el momento de mayor riesgo de abandono.
+                        ANOVA: <span class="mono">F=58.24, p&lt;0.001</span>.
                     </p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="hallazgo-card" style="border-top-color:var(--accent)">
-                    <div class="hallazgo-icon" style="background:rgba(245,166,35,.1)">📅</div>
-                    <h5 style="font-family:var(--serif);font-weight:700;color:var(--primary);font-size:1rem;margin-bottom:.5rem">
-                        Efecto pandemia
-                    </h5>
-                    <p style="font-size:.88rem;color:var(--text-muted);margin:0">
-                        Durante la pandemia (2020-2021) la deserción bajó a
-                        <strong style="color:var(--success)">3.59%</strong> gracias a subsidios y programas de
-                        retención. En el período post-pandemia rebotó a
-                        <strong style="color:var(--secondary)">4.34%</strong> (F=3.82, p=0.022).
+                <div class="hallazgo-card gold">
+                    <div class="hallazgo-icon" style="background:rgba(255,199,44,.12)">📅</div>
+                    <div class="hallazgo-stat gold">3.59% → 4.34%</div>
+                    <div style="font-size:.7rem;color:var(--text-muted);font-family:var(--mono);margin-bottom:.6rem">
+                        Pandemia (2020-21) → Post-pandemia (2022-24)
+                    </div>
+                    <h6 style="font-family:var(--serif);color:var(--primary);font-weight:700;font-size:.95rem;margin-bottom:.5rem">
+                        Efecto COVID-19 en la deserción
+                    </h6>
+                    <p style="font-size:.85rem;color:var(--text-muted);margin:0">
+                        Durante la pandemia la deserción bajó a 3.59% (subsidios de permanencia).
+                        El período post-pandemia muestra un rebote a 4.34% que requiere atención urgente.
+                        ANOVA: <span class="mono">F=3.82, p=0.022</span>.
                     </p>
                 </div>
             </div>
@@ -393,146 +379,222 @@
     </div>
 </section>
 
-<!-- ── NAVEGACIÓN RÁPIDA ──────────────────────────────────────────── -->
-<section class="py-5" style="border-bottom:1px solid var(--border)">
-    <div class="container">
-        <div class="section-eyebrow">Explorar el sistema</div>
-        <h2 class="section-title mb-4">Herramientas de análisis disponibles</h2>
-        <div class="row g-3">
-            <div class="col-md-4">
-                <a href="/#dashboard" class="quick-link-card">
-                    <i class="fa-solid fa-chart-bar fa-lg" style="color:var(--primary);flex-shrink:0"></i>
-                    <div>
-                        <h6>Dashboard Power BI</h6>
-                        <p>Visualización interactiva filtrable por departamento, año y nivel educativo.</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-4">
-                <a href="/anova/" class="quick-link-card">
-                    <i class="fa-solid fa-flask fa-lg" style="color:var(--primary);flex-shrink:0"></i>
-                    <div>
-                        <h6>Análisis Estadístico ANOVA</h6>
-                        <p>Tres pruebas ANOVA con post-hoc Tukey HSD sobre datos reales del MEN.</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-4">
-                <a href="/metodologia/" class="quick-link-card">
-                    <i class="fa-solid fa-book fa-lg" style="color:var(--primary);flex-shrink:0"></i>
-                    <div>
-                        <h6>Metodología</h6>
-                        <p>Fuentes de datos, pipeline de procesamiento, criterios estadísticos y referencias.</p>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ── TOP 5 + CONSULTOR ──────────────────────────────────────────── -->
+<!-- TOP 5 + CONSULTOR -->
 <section class="py-5" style="border-bottom:1px solid var(--border)">
     <div class="container">
         <div class="row g-4">
+
             <!-- Top 5 -->
             <div class="col-lg-5">
-                <div class="section-eyebrow">Alerta territorial</div>
-                <h2 class="section-title mb-1">
+                <div class="sec-eyebrow">Promedio histórico 2011-2024</div>
+                <h2 class="sec-title mb-1" style="font-size:1.35rem">
                     Top 5 departamentos con mayor deserción
                 </h2>
-                <p class="section-sub mb-3">Último período analizado · Datos oficiales MEN</p>
+                <p class="sec-sub mb-3" style="font-size:.85rem">Promedio histórico por departamento · Datos MEN</p>
                 {% if top_riesgo %}
-                <div class="card-inst p-0" style="overflow:hidden">
+                <div class="card-w p-0" style="overflow:hidden">
                     {% for item in top_riesgo %}
                     <div class="px-4 py-3" style="border-bottom:{% if not forloop.last %}1px solid var(--border){% else %}none{% endif %}">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center gap-3">
-                                <span class="rank-num">#{{ forloop.counter }}</span>
+                                <span class="rank-badge">#{{ forloop.counter }}</span>
                                 <div>
-                                    <div style="font-weight:700;font-size:.9rem">{{ item.departamento }}</div>
+                                    <div style="font-weight:700;font-size:.9rem;color:var(--text-main)">{{ item.departamento }}</div>
                                     {% if item.matricula != 'N/D' %}
-                                    <div style="font-size:.74rem;color:var(--text-muted)">Matrícula 5-16: {{ item.matricula }}%</div>
+                                    <div style="font-size:.72rem;color:var(--text-muted)">Matrícula 5-16: {{ item.matricula }}%</div>
                                     {% endif %}
                                 </div>
                             </div>
-                            <span class="desercion-val">{{ item.desercion }}%</span>
+                            <span class="desercion-pct">{{ item.desercion }}%</span>
                         </div>
-                        <div class="riesgo-bar-wrap">
+                        <div class="riesgo-bar-track">
                             <div class="riesgo-bar-fill" style="width:{{ item.bar_pct }}%"></div>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
                 {% endif %}
+                <p style="font-size:.74rem;color:var(--text-muted);margin-top:.75rem">
+                    <i class="fa-solid fa-circle-info me-1"></i>
+                    Datos: Ministerio de Educación Nacional · datos.gov.co · Período 2011-2024
+                </p>
             </div>
 
-            <!-- Consultor territorial -->
+            <!-- Consultor -->
             <div class="col-lg-7">
-                <div class="section-eyebrow">Diagnóstico por departamento</div>
-                <h2 class="section-title mb-1">Consultor de indicadores</h2>
-                <p class="section-sub mb-3">Seleccione un departamento para ver el análisis de regresión del modelo.</p>
-
+                <div class="sec-eyebrow">Diagnóstico por departamento</div>
+                <h2 class="sec-title mb-1" style="font-size:1.35rem">Consultor de indicadores</h2>
+                <p class="sec-sub mb-3" style="font-size:.85rem">
+                    Seleccione un departamento para ver el diagnóstico del modelo de regresión lineal.
+                </p>
                 <select id="deptSelector" style="
-                    width:100%; padding:.6rem 1rem; font-size:.9rem;
-                    border:1px solid var(--border); border-radius:4px;
-                    background:white; color:var(--text); margin-bottom:1rem;
-                    font-family:var(--sans); cursor:pointer;">
+                    width:100%; padding:.6rem 1rem; font-size:.88rem;
+                    border:1px solid var(--border); border-radius:6px;
+                    background:white; color:var(--text-main);
+                    font-family:var(--sans); cursor:pointer;
+                    margin-bottom:1rem;">
                     <option value="General">— Seleccionar departamento —</option>
                     {% for dept in departamentos %}
                     <option value="{{ dept }}">{{ dept }}</option>
                     {% endfor %}
                 </select>
-
                 <div class="consultor-box">
                     <div class="consultor-label">
-                        <i class="fa-solid fa-circle-info me-1" style="color:var(--primary)"></i>
-                        Diagnóstico del modelo de regresión
+                        <i class="fa-solid fa-circle-dot me-1 c-primary"></i>
+                        Diagnóstico del modelo
                     </div>
-                    <p class="consultor-text" id="consultor-output">
-                        Seleccione un departamento en el desplegable para visualizar el diagnóstico
-                        automatizado del modelo de regresión lineal.
+                    <p id="consultor-output" style="font-size:.88rem;line-height:1.65;color:var(--text-main);margin:0">
+                        Seleccione un departamento para visualizar el diagnóstico automatizado.
                     </p>
+                </div>
+                <div class="row g-2 mt-3">
+                    <div class="col-4">
+                        <div style="background:rgba(200,16,46,.06);border:1px solid rgba(200,16,46,.2);border-radius:6px;padding:.6rem;text-align:center;font-size:.72rem">
+                            <strong style="color:var(--accent)">RIESGO</strong><br>
+                            <span style="color:var(--text-muted)">Supera la proyección</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div style="background:rgba(27,122,74,.06);border:1px solid rgba(27,122,74,.2);border-radius:6px;padding:.6rem;text-align:center;font-size:.72rem">
+                            <strong style="color:var(--success)">ÉXITO</strong><br>
+                            <span style="color:var(--text-muted)">Por debajo</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div style="background:rgba(0,53,128,.06);border:1px solid rgba(0,53,128,.2);border-radius:6px;padding:.6rem;text-align:center;font-size:.72rem">
+                            <strong style="color:var(--primary)">ESTABILIDAD</strong><br>
+                            <span style="color:var(--text-muted)">Dentro del rango</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ── DASHBOARD POWER BI ─────────────────────────────────────────── -->
-<section class="dashboard-section" id="dashboard">
+<!-- NARIÑO EN EL CONTEXTO NACIONAL -->
+<section style="background:var(--bg-section);padding:3.5rem 0;border-bottom:1px solid var(--border)">
     <div class="container">
-        <div class="section-eyebrow">Visualización interactiva</div>
-        <h2 class="section-title mb-1">Dashboard Power BI</h2>
-        <p class="section-sub mb-4">
-            Promedio nacional {{ promedio }}% en {{ ultimo_ano }} ·
-            Departamento crítico: {{ depto_critico }} ({{ valor_depto_critico }}%) ·
-            Proyección IA {{ ano_prediccion }}: {{ prediccion_ia }}%
+        <div class="sec-eyebrow">Análisis territorial</div>
+        <h2 class="sec-title mb-4">Nariño en el contexto nacional</h2>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="narino-card">
+                    <div style="font-size:.7rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:1.5px;font-family:var(--mono);margin-bottom:.5rem">
+                        Deserción promedio histórica
+                    </div>
+                    <div class="narino-stat">{{ narino_avg }}%</div>
+                    <div style="font-size:.8rem;color:rgba(255,255,255,.7);margin-top:.4rem">
+                        Nariño · Período 2011-2024
+                    </div>
+                    <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.15)">
+                        <div style="font-size:.8rem;color:rgba(255,255,255,.7)">
+                            Promedio nacional: <strong style="color:white">4.07%</strong>
+                        </div>
+                        <div style="font-size:.8rem;color:rgba(255,255,255,.7);margin-top:.2rem">
+                            Nariño está <strong style="color:#FFC72C">por debajo del promedio</strong> nacional
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card-w h-100">
+                    <h5 style="font-family:var(--serif);color:var(--primary);margin-bottom:1rem;font-size:1rem">
+                        Nariño: resultados favorables frente al promedio nacional
+                    </h5>
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-4">
+                            <div style="background:var(--bg-section);border-radius:6px;padding:1rem;text-align:center">
+                                <div class="kpi-num" style="font-size:1.6rem;color:var(--success)">{{ narino_avg }}%</div>
+                                <div class="kpi-label">Deserción prom. Nariño</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div style="background:var(--bg-section);border-radius:6px;padding:1rem;text-align:center">
+                                <div class="kpi-num" style="font-size:1.6rem">4.07%</div>
+                                <div class="kpi-label">Promedio nacional</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div style="background:rgba(27,122,74,.07);border:1px solid rgba(27,122,74,.2);border-radius:6px;padding:1rem;text-align:center">
+                                <div class="kpi-num" style="font-size:1.6rem;color:var(--success)">Tercio<br>inferior</div>
+                                <div class="kpi-label">Posición en el ranking</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="font-size:.88rem;color:var(--text-muted);margin:0">
+                        Nariño, donde se ubica la sede Pasto de la Universidad Cooperativa de Colombia,
+                        registra una deserción por debajo del promedio nacional, posicionándose en el
+                        tercio inferior del ranking (mejor rendimiento). Esto sugiere que las estrategias
+                        de permanencia escolar en el departamento han sido relativamente efectivas,
+                        aunque persisten desafíos en zonas rurales de la costa Pacífica nariñense.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats nacionales adicionales -->
+        <div class="row g-3 mt-1">
+            <div class="col-md-4">
+                <div class="card-w" style="border-left:3px solid var(--success)">
+                    <div class="sec-eyebrow" style="color:var(--success)">Indicador positivo</div>
+                    <div class="kpi-num" style="font-size:2rem">90.05%</div>
+                    <div class="kpi-label">Aprobación promedio nacional</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-w" style="border-left:3px solid var(--accent)">
+                    <div class="sec-eyebrow" style="color:var(--accent)">Indicador de riesgo</div>
+                    <div class="kpi-num" style="font-size:2rem">5.89%</div>
+                    <div class="kpi-label">Reprobación promedio nacional</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-w" style="border-left:3px solid var(--primary)">
+                    <div class="sec-eyebrow">Cobertura</div>
+                    <div class="kpi-num" style="font-size:2rem">{{ promedio_matricula }}%</div>
+                    <div class="kpi-label">Tasa de matriculación 5-16 años</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DASHBOARD POWER BI -->
+<section class="dash-section" id="dashboard">
+    <div class="container">
+        <div class="sec-eyebrow">Visualización interactiva</div>
+        <h2 class="sec-title mb-1">Dashboard Power BI</h2>
+        <p class="sec-sub mb-4">
+            Datos del Ministerio de Educación Nacional · Filtros por departamento, año y nivel educativo ·
+            Deserción crítica {{ ultimo_ano }}: {{ depto_critico }} ({{ valor_depto_critico }}%)
         </p>
         <div class="iframe-wrap">
             <iframe title="Dashboard Deserción Escolar Colombia"
                     width="100%" height="760"
                     src="{{ powerbi_embed_url }}"
-                    frameborder="0" allowFullScreen="true">
-            </iframe>
+                    frameborder="0" allowFullScreen="true"></iframe>
         </div>
         <div class="row g-3 mt-3">
             <div class="col-md-6">
-                <div class="card-inst" style="border-left:3px solid var(--primary)">
-                    <strong style="font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;color:var(--primary)">Proyección del modelo</strong>
-                    <p style="font-size:.88rem;color:var(--text-muted);margin:.5rem 0 0">
-                        El modelo de regresión lineal proyecta <strong>{{ prediccion_ia }}%</strong> para {{ ano_prediccion }},
-                        con un margen técnico de ±{{ margen_modelo }} p.p. para clasificar departamentos
-                        en categorías de riesgo, estabilidad o resultado favorable.
+                <div class="card-w" style="border-left:3px solid var(--primary)">
+                    <strong style="font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--primary)">
+                        Proyección del modelo
+                    </strong>
+                    <p style="font-size:.88rem;color:var(--text-muted);margin:.4rem 0 0">
+                        El modelo de regresión lineal proyecta <strong>{{ prediccion_ia }}%</strong> para
+                        {{ ano_prediccion }}, con margen técnico de ±{{ margen_modelo }} p.p.
                     </p>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card-inst" style="border-left:3px solid var(--secondary)">
-                    <strong style="font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;color:var(--secondary)">Lectura territorial</strong>
-                    <p style="font-size:.88rem;color:var(--text-muted);margin:.5rem 0 0">
-                        La Amazonia concentra los índices más elevados. La dispersión geográfica,
-                        escasa conectividad y condiciones socioeconómicas explican la brecha
-                        frente al promedio nacional. El tablero permite filtrar por territorio y comparar variables.
+                <div class="card-w" style="border-left:3px solid var(--accent)">
+                    <strong style="font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--accent)">
+                        Mejor indicador
+                    </strong>
+                    <p style="font-size:.88rem;color:var(--text-muted);margin:.4rem 0 0">
+                        <strong>{{ depto_destacado }}</strong> registra la deserción más baja:
+                        <strong>{{ valor_depto_destacado }}%</strong>. Sirve como referencia de buenas prácticas.
                     </p>
                 </div>
             </div>
@@ -540,62 +602,58 @@
     </div>
 </section>
 
-<!-- ── SOBRE EL PROYECTO ──────────────────────────────────────────── -->
-<section class="sobre-section">
+<!-- SOBRE EL PROYECTO -->
+<section class="about-section">
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-7">
-                <div style="font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:2px;color:rgba(245,166,35,.85);margin-bottom:.5rem">
-                    Sobre el proyecto
-                </div>
-                <h2 style="font-family:var(--serif);font-size:1.8rem;font-weight:700;margin-bottom:1rem">
-                    Universidad Cooperativa de Colombia<br>
-                    <span style="color:#F5A623">Sede Pasto</span>
-                </h2>
-                <p>
-                    Este sistema fue desarrollado en el marco del concurso <strong>Datos al Ecosistema 2026</strong>
-                    del Ministerio de Tecnologías de la Información y las Comunicaciones (MinTIC) de Colombia.
+                <div class="sec-eyebrow">El equipo</div>
+                <h2 class="sec-title mb-3">Sobre el proyecto</h2>
+                <p style="color:var(--text-muted);font-size:.95rem;line-height:1.7">
+                    Este proyecto fue desarrollado por estudiantes de la <strong style="color:var(--text-main)">
+                    Universidad Cooperativa de Colombia sede Pasto</strong> en el marco del concurso
+                    <strong style="color:var(--text-main)">«Datos al Ecosistema 2026»</strong> del
+                    Ministerio de TIC de Colombia.
                 </p>
-                <p style="color:rgba(255,255,255,.75)">
-                    El objetivo es transformar datos abiertos del Ministerio de Educación Nacional en inteligencia
-                    accionable para orientar políticas de permanencia escolar, identificar territorios críticos y
-                    cuantificar el impacto de fenómenos como la pandemia sobre el sistema educativo colombiano.
+                <p style="color:var(--text-muted);font-size:.95rem;line-height:1.7;margin-top:.75rem">
+                    El análisis procesa datos abiertos del Ministerio de Educación Nacional disponibles en
+                    datos.gov.co, abarcando <strong style="color:var(--text-main)">462 registros históricos</strong>
+                    de <strong style="color:var(--text-main)">33 departamentos</strong> entre
+                    <strong style="color:var(--text-main)">2011 y 2024</strong>.
                 </p>
-                <p style="color:rgba(255,255,255,.75)">
-                    El pipeline de procesamiento utiliza PySpark para el ETL, pandas para la consolidación,
-                    scipy.stats para los análisis estadísticos y Power BI para la visualización interactiva.
+                <p style="color:var(--text-muted);font-size:.95rem;line-height:1.7;margin-top:.75rem">
+                    La metodología combina procesamiento de Big Data con <strong style="color:var(--text-main)">
+                    PySpark</strong>, visualización interactiva en <strong style="color:var(--text-main)">
+                    Power BI</strong> y validación estadística con pruebas
+                    <strong style="color:var(--text-main)">ANOVA y post-hoc Tukey HSD</strong> mediante Python/scipy.
                 </p>
-                <div class="d-flex gap-3 mt-3">
-                    <a href="/metodologia/" class="btn-hero-primary" style="font-size:.85rem">
-                        Ver metodología completa
-                    </a>
-                    <a href="/anova/" class="btn-hero-outline" style="font-size:.85rem">
-                        Ver análisis ANOVA
-                    </a>
+                <div class="d-flex gap-3 mt-3 flex-wrap">
+                    <a href="/metodologia/" class="btn-inst" style="font-size:.85rem">Ver metodología</a>
+                    <a href="/anova/" class="btn-outline-inst" style="font-size:.85rem">Análisis estadístico</a>
                 </div>
             </div>
-            <div class="col-lg-5 text-center">
-                <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:2.5rem 2rem">
-                    <div style="font-size:3.5rem;margin-bottom:1rem">🏛️</div>
-                    <div style="font-family:var(--serif);font-size:1rem;font-weight:700;margin-bottom:.5rem">
+            <div class="col-lg-5">
+                <div class="card-w text-center" style="border-top:3px solid var(--primary)">
+                    <div style="font-size:3rem;margin-bottom:.75rem">🏛️</div>
+                    <h5 style="font-family:var(--serif);color:var(--primary);margin-bottom:.25rem">
                         Universidad Cooperativa de Colombia
-                    </div>
-                    <div style="font-size:.82rem;color:rgba(255,255,255,.6);margin-bottom:1.5rem">
+                    </h5>
+                    <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:1.2rem">
                         Sede Pasto · Nariño · Colombia
-                    </div>
-                    <div style="border-top:1px solid rgba(255,255,255,.12);padding-top:1.2rem">
-                        <div style="font-size:.74rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem">Tecnologías utilizadas</div>
-                        <div style="display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center">
-                            {% for tech in techs %}
-                            <span style="background:rgba(255,255,255,.1);padding:.2rem .6rem;border-radius:3px;font-size:.72rem;font-family:var(--mono)">{{ tech }}</span>
-                            {% empty %}
-                            <span style="background:rgba(255,255,255,.1);padding:.2rem .6rem;border-radius:3px;font-size:.72rem;font-family:var(--mono)">Python</span>
-                            <span style="background:rgba(255,255,255,.1);padding:.2rem .6rem;border-radius:3px;font-size:.72rem;font-family:var(--mono)">PySpark</span>
-                            <span style="background:rgba(255,255,255,.1);padding:.2rem .6rem;border-radius:3px;font-size:.72rem;font-family:var(--mono)">Django</span>
-                            <span style="background:rgba(255,255,255,.1);padding:.2rem .6rem;border-radius:3px;font-size:.72rem;font-family:var(--mono)">Power BI</span>
-                            <span style="background:rgba(255,255,255,.1);padding:.2rem .6rem;border-radius:3px;font-size:.72rem;font-family:var(--mono)">scipy</span>
-                            <span style="background:rgba(255,255,255,.1);padding:.2rem .6rem;border-radius:3px;font-size:.72rem;font-family:var(--mono)">Vercel</span>
+                    </p>
+                    <div style="border-top:1px solid var(--border);padding-top:1rem">
+                        <div class="sec-eyebrow mb-2" style="text-align:left">Tecnologías utilizadas</div>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for t in "Python,PySpark,Django,Power BI,scipy,statsmodels,pandas,Vercel"|cut:" " %}
                             {% endfor %}
+                            <span class="badge-inst">Python</span>
+                            <span class="badge-inst">PySpark</span>
+                            <span class="badge-inst">Django</span>
+                            <span class="badge-inst">Power BI</span>
+                            <span class="badge-inst">scipy</span>
+                            <span class="badge-inst">statsmodels</span>
+                            <span class="badge-inst">pandas</span>
+                            <span class="badge-inst">Vercel</span>
                         </div>
                     </div>
                 </div>
@@ -609,18 +667,16 @@
 {% block extra_scripts %}
 <script>
 const insights = JSON.parse('{{ ia_insights_json|safe }}');
-const selector = document.getElementById('deptSelector');
-const output   = document.getElementById('consultor-output');
+const sel = document.getElementById('deptSelector');
+const out = document.getElementById('consultor-output');
+out.style.transition = 'opacity 0.2s';
 
-selector.addEventListener('change', function () {
-    const dept = this.value;
-    output.style.opacity = '0.4';
+sel.addEventListener('change', function () {
+    out.style.opacity = '0.3';
     setTimeout(() => {
-        const msg = insights[dept] || 'No se encontró diagnóstico para este departamento.';
-        output.textContent = msg;
-        output.style.opacity = '1';
-    }, 250);
+        out.textContent = insights[this.value] || 'No se encontró diagnóstico para este departamento.';
+        out.style.opacity = '1';
+    }, 200);
 });
-output.style.transition = 'opacity 0.25s';
 </script>
 {% endblock %}
