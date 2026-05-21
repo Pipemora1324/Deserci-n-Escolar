@@ -1,0 +1,507 @@
+{% extends 'base.html' %}
+
+{% block title %}Chatbot IA | Deserción Escolar Colombia{% endblock %}
+{% block nav_chat %}active{% endblock %}
+
+{% block extra_styles %}
+.chat-layout {
+    display: flex;
+    height: calc(100vh - 58px - 1px);
+    overflow: hidden;
+}
+
+/* ── SIDEBAR ──────────────────────────────────── */
+.chat-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 1.2rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.sidebar-title {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-sec);
+    margin-bottom: 0.5rem;
+}
+
+.suggestion-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    color: var(--text);
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: border-color 0.18s, background 0.18s;
+    line-height: 1.4;
+}
+
+.suggestion-btn:hover {
+    border-color: var(--blue);
+    background: rgba(26,110,181,0.08);
+}
+
+.data-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.78rem;
+}
+
+.data-chip strong { color: var(--blue-light); font-family: var(--mono); }
+.data-chip p { color: var(--text-sec); margin: 0.2rem 0 0; font-size: .74rem; }
+
+/* ── CHAT AREA ────────────────────────────────── */
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chat-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.bot-avatar {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--blue), #a371f7);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    display: inline-block;
+    margin-right: 0.3rem;
+    animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+.chat-messages::-webkit-scrollbar { width: 4px; }
+.chat-messages::-webkit-scrollbar-track { background: transparent; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ── MESSAGES ─────────────────────────────────── */
+.msg { display: flex; gap: 0.75rem; max-width: 78%; }
+.msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.msg.bot  { align-self: flex-start; }
+
+.msg-avatar {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.msg.bot  .msg-avatar { background: linear-gradient(135deg,var(--blue),#a371f7); }
+.msg.user .msg-avatar { background: var(--surface2); border: 1px solid var(--border); }
+
+.msg-bubble {
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+.msg.bot  .msg-bubble {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-top-left-radius: 4px;
+}
+
+.msg.user .msg-bubble {
+    background: var(--blue);
+    color: white;
+    border-top-right-radius: 4px;
+}
+
+.msg-time {
+    font-size: 0.65rem;
+    color: var(--text-sec);
+    margin-top: 0.3rem;
+    font-family: var(--mono);
+}
+
+.msg.user .msg-time { text-align: right; }
+
+/* ── TYPING ───────────────────────────────────── */
+.typing-indicator {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    border-top-left-radius: 4px;
+    width: fit-content;
+}
+
+.typing-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--text-sec);
+    animation: typing-bounce 1.2s infinite;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing-bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* ── INPUT AREA ───────────────────────────────── */
+.chat-input-area {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 1rem 1.5rem;
+    flex-shrink: 0;
+}
+
+.input-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+
+#chatInput {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    color: var(--text);
+    font-size: 0.9rem;
+    resize: none;
+    max-height: 120px;
+    min-height: 44px;
+    line-height: 1.5;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+#chatInput:focus { border-color: var(--blue); }
+#chatInput::placeholder { color: var(--text-sec); }
+
+.send-btn {
+    width: 44px; height: 44px;
+    background: var(--blue);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, transform 0.15s;
+    flex-shrink: 0;
+}
+
+.send-btn:hover { background: #1d7dd4; transform: scale(1.05); }
+.send-btn:disabled { background: var(--border); cursor: not-allowed; transform: none; }
+
+.input-hint {
+    font-size: 0.68rem;
+    color: var(--text-sec);
+    margin-top: 0.4rem;
+    font-family: var(--mono);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .chat-sidebar { display: none; }
+}
+{% endblock %}
+
+{% block content %}
+<div class="chat-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="chat-sidebar">
+        <div>
+            <div class="sidebar-title">Preguntas sugeridas</div>
+            <div class="d-flex flex-column gap-2">
+                <button class="suggestion-btn" data-q="¿Cuáles son los 5 departamentos con mayor deserción escolar?">
+                    ¿Cuáles son los 5 departamentos con mayor deserción?
+                </button>
+                <button class="suggestion-btn" data-q="¿Qué pasó con la deserción durante la pandemia de COVID-19?">
+                    ¿Qué pasó con la deserción durante la pandemia?
+                </button>
+                <button class="suggestion-btn" data-q="¿Por qué la secundaria tiene mayor deserción que primaria?">
+                    ¿Por qué secundaria tiene más deserción que primaria?
+                </button>
+                <button class="suggestion-btn" data-q="Explícame los resultados del análisis ANOVA por región geográfica.">
+                    Explícame el ANOVA por región geográfica
+                </button>
+                <button class="suggestion-btn" data-q="¿Qué políticas educativas se recomiendan para reducir la deserción en la Amazonia?">
+                    ¿Qué políticas reducirían la deserción en la Amazonia?
+                </button>
+                <button class="suggestion-btn" data-q="¿Cuál es la situación de Nariño en deserción escolar comparado con el promedio nacional?">
+                    ¿Cómo está Nariño comparado con el promedio nacional?
+                </button>
+            </div>
+        </div>
+
+        <div>
+            <div class="sidebar-title">Datos clave</div>
+            <div class="d-flex flex-column gap-2">
+                <div class="data-chip">
+                    <strong>4.07%</strong>
+                    <p>Promedio nacional de deserción escolar</p>
+                </div>
+                <div class="data-chip">
+                    <strong>465 registros</strong>
+                    <p>33 departamentos · 2011–2024</p>
+                </div>
+                <div class="data-chip">
+                    <strong>Guainía 6.86%</strong>
+                    <p>Departamento con mayor deserción</p>
+                </div>
+                <div class="data-chip">
+                    <strong>F=49.08 p&lt;0.001</strong>
+                    <p>ANOVA por región geográfica</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top:auto">
+            <div class="data-chip" style="border-color:rgba(163,113,247,0.3)">
+                <strong style="color:var(--purple)">claude-sonnet-4-6</strong>
+                <p>Modelo Anthropic · Especializado en datos del proyecto</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CHAT -->
+    <div class="chat-main">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="bot-avatar">🤖</div>
+            <div>
+                <div style="font-weight:700;font-size:.92rem">Asistente IA · Deserción Escolar</div>
+                <div style="font-size:.74rem;color:var(--text-sec)">
+                    <span class="status-dot"></span>En línea · UCC Pasto · Datos al Ecosistema 2026
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="msg bot">
+                <div class="msg-avatar">🤖</div>
+                <div>
+                    <div class="msg-bubble">
+                        ¡Hola! Soy el asistente especializado del proyecto <strong>Datos al Ecosistema 2026</strong>
+                        de la Universidad Cooperativa de Colombia sede Pasto.<br><br>
+                        Puedo ayudarte a entender los análisis de deserción escolar en Colombia:
+                        datos por departamento, resultados del ANOVA estadístico, impacto de la
+                        pandemia, políticas educativas y más.<br><br>
+                        ¿Sobre qué te gustaría hablar?
+                    </div>
+                    <div class="msg-time" id="init-time"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input-area">
+            <div class="input-row">
+                <textarea id="chatInput"
+                          placeholder="Pregunta sobre deserción escolar en Colombia..."
+                          rows="1"></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    <i class="fa-solid fa-paper-plane" style="font-size:.9rem"></i>
+                </button>
+            </div>
+            <div class="input-hint">
+                Enter para enviar · Shift+Enter para nueva línea
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const messagesEl = document.getElementById('chatMessages');
+const inputEl    = document.getElementById('chatInput');
+const sendBtn    = document.getElementById('sendBtn');
+let history = [];
+let isLoading = false;
+
+// Set initial time
+document.getElementById('init-time').textContent = nowTime();
+
+function nowTime() {
+    return new Date().toLocaleTimeString('es-CO', { hour:'2-digit', minute:'2-digit' });
+}
+
+function getCsrfToken() {
+    const name = 'csrftoken';
+    const cookies = document.cookie.split(';');
+    for (let c of cookies) {
+        const [k, v] = c.trim().split('=');
+        if (k === name) return decodeURIComponent(v);
+    }
+    return '';
+}
+
+function scrollToBottom() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function addMessage(text, role) {
+    const isUser = role === 'user';
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+
+    const avatarIcon = isUser ? '👤' : '🤖';
+    const time = nowTime();
+
+    div.innerHTML = `
+        <div class="msg-avatar">${avatarIcon}</div>
+        <div>
+            <div class="msg-bubble">${escapeHtml(text).replace(/\n/g, '<br>')}</div>
+            <div class="msg-time">${time}</div>
+        </div>`;
+
+    messagesEl.appendChild(div);
+    scrollToBottom();
+}
+
+function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+              .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function showTyping() {
+    const div = document.createElement('div');
+    div.className = 'msg bot';
+    div.id = 'typing-msg';
+    div.innerHTML = `
+        <div class="msg-avatar">🤖</div>
+        <div>
+            <div class="typing-indicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>`;
+    messagesEl.appendChild(div);
+    scrollToBottom();
+}
+
+function hideTyping() {
+    const el = document.getElementById('typing-msg');
+    if (el) el.remove();
+}
+
+async function sendMessage() {
+    if (isLoading) return;
+    const text = inputEl.value.trim();
+    if (!text) return;
+
+    isLoading = true;
+    sendBtn.disabled = true;
+    addMessage(text, 'user');
+    inputEl.value = '';
+    inputEl.style.height = 'auto';
+    showTyping();
+
+    try {
+        const res = await fetch('/api/chat/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken(),
+            },
+            body: JSON.stringify({ message: text, history }),
+        });
+
+        const data = await res.json();
+        hideTyping();
+
+        const reply = data.response || data.error || 'Error inesperado.';
+        addMessage(reply, 'bot');
+
+        history.push({ role: 'user', content: text });
+        history.push({ role: 'assistant', content: reply });
+        if (history.length > 20) history = history.slice(-20);
+
+    } catch (err) {
+        hideTyping();
+        addMessage('Error de conexión. Verifica tu conexión e intenta de nuevo.', 'bot');
+    } finally {
+        isLoading = false;
+        sendBtn.disabled = false;
+        inputEl.focus();
+    }
+}
+
+// Suggestion buttons
+document.querySelectorAll('.suggestion-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        inputEl.value = btn.dataset.q;
+        inputEl.focus();
+        sendMessage();
+    });
+});
+
+// Textarea auto-resize + Enter to send
+inputEl.addEventListener('input', () => {
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
+});
+
+inputEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,256 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Deserción Escolar Colombia{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --surface2: #1c2128;
+            --border: #30363d;
+            --blue: #1a6eb5;
+            --blue-light: #58a6ff;
+            --orange: #f5a623;
+            --red: #d0021b;
+            --green: #3fb950;
+            --purple: #a371f7;
+            --text: #e6edf3;
+            --text-sec: #8b949e;
+            --mono: 'Roboto Mono', monospace;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        /* ── NAVBAR ───────────────────────────────────────── */
+        .dark-nav {
+            background: rgba(13, 17, 23, 0.97);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-brand {
+            font-family: var(--mono);
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--blue-light);
+            text-decoration: none;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
+
+        .nav-brand:hover { color: var(--blue-light); text-decoration: none; }
+
+        .nav-links {
+            display: flex;
+            gap: 2px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 0.38rem 0.9rem;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-sec);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: color 0.18s, background 0.18s;
+        }
+
+        .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+        .nav-links a.active { color: var(--blue-light); background: rgba(88,166,255,0.08); }
+
+        /* ── SHARED CARDS ─────────────────────────────────── */
+        .card-dark {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: border-color 0.2s;
+        }
+        .card-dark:hover { border-color: #484f58; }
+
+        /* ── TYPOGRAPHY HELPERS ───────────────────────────── */
+        .mono { font-family: var(--mono); }
+
+        .eyebrow {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--blue-light);
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text);
+            margin: 0.25rem 0 0.5rem;
+        }
+
+        .section-sub { color: var(--text-sec); font-size: 0.92rem; margin: 0; }
+
+        /* ── KPI ──────────────────────────────────────────── */
+        .kpi-value {
+            font-family: var(--mono);
+            font-size: 2.6rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .kpi-label {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-sec);
+            margin-top: 0.5rem;
+        }
+
+        /* ── BUTTONS ──────────────────────────────────────── */
+        .btn-blue {
+            background: var(--blue);
+            color: white !important;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.86rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s, transform 0.15s;
+        }
+        .btn-blue:hover { background: #1d7dd4; transform: translateY(-1px); }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text) !important;
+            border: 1px solid var(--border);
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.86rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .btn-ghost:hover { border-color: var(--blue-light); color: var(--blue-light) !important; }
+
+        /* ── BADGE ────────────────────────────────────────── */
+        .badge-pill {
+            background: rgba(88,166,255,0.1);
+            color: var(--blue-light);
+            border: 1px solid rgba(88,166,255,0.25);
+            padding: 0.22rem 0.8rem;
+            border-radius: 20px;
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        /* ── TABLE ────────────────────────────────────────── */
+        .dark-table { width: 100%; border-collapse: collapse; }
+        .dark-table th {
+            background: var(--surface2);
+            color: var(--text-sec);
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            padding: 0.6rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        .dark-table td {
+            padding: 0.6rem 1rem;
+            font-size: 0.86rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+        .dark-table tr:last-child td { border-bottom: none; }
+        .dark-table tr:hover td { background: rgba(255,255,255,0.018); }
+
+        /* ── COLORS ───────────────────────────────────────── */
+        .c-blue  { color: var(--blue-light); }
+        .c-orange { color: var(--orange); }
+        .c-red   { color: var(--red); }
+        .c-green { color: var(--green); }
+        .c-purple { color: var(--purple); }
+        .c-sec   { color: var(--text-sec); }
+
+        /* ── FOOTER ───────────────────────────────────────── */
+        .dark-footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 5rem;
+        }
+        .dark-footer p {
+            color: var(--text-sec);
+            font-size: 0.78rem;
+            margin: 0.2rem 0;
+            font-family: var(--mono);
+        }
+
+        /* ── RESPONSIVE ───────────────────────────────────── */
+        @media (max-width: 768px) {
+            .dark-nav { padding: 0 1rem; }
+            .kpi-value { font-size: 2rem; }
+            .nav-links { display: none; }
+        }
+
+        {% block extra_styles %}{% endblock %}
+    </style>
+</head>
+<body>
+
+<nav class="dark-nav">
+    <a href="/" class="nav-brand">
+        <i class="fa-solid fa-chart-line me-2"></i>Analítica Educativa · Colombia
+    </a>
+    <ul class="nav-links">
+        <li><a href="/" class="{% block nav_home %}{% endblock %}">Inicio</a></li>
+        <li><a href="/#dashboard" class="{% block nav_db %}{% endblock %}">Dashboard</a></li>
+        <li><a href="/anova/" class="{% block nav_anova %}{% endblock %}">Análisis ANOVA</a></li>
+        <li><a href="/chatbot/" class="{% block nav_chat %}{% endblock %}">Chatbot IA</a></li>
+    </ul>
+</nav>
+
+{% block content %}{% endblock %}
+
+<footer class="dark-footer">
+    <p>SISTEMA NACIONAL DE ANALÍTICA EDUCATIVA · COLOMBIA 2026</p>
+    <p>Universidad Cooperativa de Colombia · Sede Pasto · Datos al Ecosistema 2026</p>
+    <p>Fuente: Ministerio de Educación Nacional · datos.gov.co</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>
