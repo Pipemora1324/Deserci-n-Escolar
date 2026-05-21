@@ -8,8 +8,7 @@ from analytics import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
+    path('', views.home, name='index'),
     path('anova/', views.anova_view, name='anova'),
-    path('chatbot/', views.chatbot_page, name='chatbot'),
-    path('api/chat/', views.chat_api, name='chat_api'),
+    path('metodologia/', views.metodologia, name='metodologia'),
 ]

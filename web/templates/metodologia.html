@@ -1,0 +1,602 @@
+{% extends 'base.html' %}
+
+{% block title %}Metodología | Deserción Escolar Colombia{% endblock %}
+{% block nav_met %}active{% endblock %}
+
+{% block extra_styles %}
+.page-hero {
+    background: linear-gradient(135deg, #002244 0%, #003d7a 100%);
+    padding: 3rem 0 2.5rem;
+    color: white;
+    border-bottom: 3px solid var(--accent);
+}
+.page-hero h1 { font-family: var(--serif); color: white; font-size: 2rem; margin: .5rem 0 .75rem; }
+.page-hero p  { color: rgba(255,255,255,.78); max-width: 640px; }
+
+/* Sections */
+.met-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.met-section-head {
+    background: var(--primary);
+    color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.met-section-num {
+    background: rgba(255,255,255,.15);
+    color: white;
+    font-family: var(--mono);
+    font-size: .68rem;
+    padding: .15rem .55rem;
+    border-radius: 3px;
+    font-weight: 700;
+}
+
+.met-body { padding: 1.8rem; }
+
+/* Dataset table */
+.var-table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+.var-table th {
+    background: var(--primary);
+    color: white;
+    padding: .55rem 1rem;
+    text-align: left;
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    font-weight: 600;
+}
+.var-table td { padding: .5rem 1rem; border-bottom: 1px solid var(--border); color: var(--text); }
+.var-table tr:nth-child(even) td { background: #F8FAFB; }
+.var-table tr:last-child td { border-bottom: none; }
+
+/* Flowchart */
+.flowchart {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    padding: 1.2rem 0;
+    justify-content: center;
+}
+
+.flow-node {
+    background: var(--primary);
+    color: white;
+    border-radius: 4px;
+    padding: .7rem 1.2rem;
+    text-align: center;
+    font-size: .82rem;
+    font-weight: 700;
+    min-width: 110px;
+    box-shadow: var(--shadow);
+    position: relative;
+}
+
+.flow-node.alt { background: var(--secondary); }
+.flow-node.final { background: var(--success); }
+.flow-node.accent { background: var(--accent); color: var(--text); }
+
+.flow-node small {
+    display: block;
+    font-size: .66rem;
+    font-weight: 400;
+    opacity: .8;
+    margin-top: .2rem;
+    font-family: var(--mono);
+}
+
+.flow-arrow {
+    font-size: 1.3rem;
+    color: var(--primary);
+    padding: 0 .4rem;
+    flex-shrink: 0;
+}
+
+/* ANOVA math */
+.math-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--primary);
+    border-radius: 4px;
+    padding: 1rem 1.5rem;
+    font-family: var(--mono);
+    font-size: .88rem;
+    line-height: 1.8;
+    margin: 1rem 0;
+    color: var(--text);
+}
+
+.h-null { color: var(--secondary); font-weight: 700; }
+.h-alt  { color: var(--success); font-weight: 700; }
+
+/* Step cards */
+.step-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.2rem;
+    height: 100%;
+}
+
+.step-num {
+    width: 32px; height: 32px;
+    background: var(--primary);
+    color: white;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: .78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-bottom: .75rem;
+}
+
+/* Ref list */
+.ref-item {
+    padding: .75rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: .88rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+.ref-item:last-child { border-bottom: none; }
+.ref-num {
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--primary);
+    background: rgba(0,51,102,.08);
+    padding: .15rem .45rem;
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: .1rem;
+}
+
+/* Limitation */
+.limit-item {
+    display: flex;
+    gap: .75rem;
+    padding: .75rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: .88rem;
+}
+.limit-item:last-child { border-bottom: none; }
+{% endblock %}
+
+{% block content %}
+
+<section class="page-hero">
+    <div class="container">
+        <span class="badge-inst mb-3">Documento técnico · v1.0 · 2026</span>
+        <h1>Metodología del Sistema de Analítica</h1>
+        <p>
+            Descripción detallada de las fuentes de datos, el pipeline de procesamiento,
+            los métodos estadísticos utilizados y las consideraciones éticas del proyecto
+            <em>Datos al Ecosistema 2026</em>.
+        </p>
+    </div>
+</section>
+
+<div class="container py-5">
+
+    <!-- ══ 1. FUENTE DE DATOS ══════════════════════════════════════════ -->
+    <div class="met-section">
+        <div class="met-section-head">
+            <span class="met-section-num">01</span>
+            <i class="fa-solid fa-database"></i>
+            Fuente de datos
+        </div>
+        <div class="met-body">
+            <div class="row g-4">
+                <div class="col-md-7">
+                    <p>
+                        Los datos provienen del conjunto abierto publicado por el
+                        <strong>Ministerio de Educación Nacional de Colombia</strong> en el portal
+                        de datos abiertos <a href="https://www.datos.gov.co" target="_blank"
+                        style="color:var(--primary)">datos.gov.co</a>, bajo el identificador
+                        <code class="mono" style="background:var(--bg);padding:.1rem .4rem;border-radius:3px;font-size:.82rem">ji8i-4anb</code>.
+                    </p>
+                    <p>
+                        El dataset contiene estadísticas educativas anuales por departamento, incluyendo
+                        tasas de deserción por nivel educativo, cobertura escolar, reprobación, repitencia
+                        y puntaje de estudiantes. Es de acceso público bajo la licencia de datos abiertos
+                        del gobierno colombiano.
+                    </p>
+                    <div style="background:rgba(0,51,102,.05);border:1px solid rgba(0,51,102,.15);border-radius:4px;padding:1rem 1.2rem;margin-top:1rem">
+                        <strong style="font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--primary)">
+                            Acceso al dataset
+                        </strong>
+                        <p style="font-size:.85rem;margin:.4rem 0 0">
+                            <a href="https://www.datos.gov.co/Educaci-n/Tasa-de-Deserci-n-Escolar/ji8i-4anb"
+                               target="_blank" rel="noopener" style="color:var(--primary)">
+                                <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>
+                                datos.gov.co — Tasa de Deserción Escolar (ji8i-4anb)
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="card-inst p-0" style="overflow:hidden">
+                        <div style="background:var(--primary);color:white;padding:.6rem 1rem;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px">
+                            Ficha del dataset
+                        </div>
+                        <table style="width:100%;font-size:.83rem;border-collapse:collapse">
+                            <tr style="border-bottom:1px solid var(--border)">
+                                <td style="padding:.5rem 1rem;color:var(--text-muted);width:45%">Fuente</td>
+                                <td style="padding:.5rem 1rem;font-weight:600">Ministerio de Educación Nacional</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid var(--border)">
+                                <td style="padding:.5rem 1rem;color:var(--text-muted)">Portal</td>
+                                <td style="padding:.5rem 1rem">datos.gov.co</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid var(--border)">
+                                <td style="padding:.5rem 1rem;color:var(--text-muted)">Período</td>
+                                <td style="padding:.5rem 1rem;font-family:var(--mono)">2011 – 2024</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid var(--border)">
+                                <td style="padding:.5rem 1rem;color:var(--text-muted)">Registros</td>
+                                <td style="padding:.5rem 1rem;font-family:var(--mono)">465 procesados</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid var(--border)">
+                                <td style="padding:.5rem 1rem;color:var(--text-muted)">Departamentos</td>
+                                <td style="padding:.5rem 1rem;font-family:var(--mono)">33</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:.5rem 1rem;color:var(--text-muted)">Variables</td>
+                                <td style="padding:.5rem 1rem;font-family:var(--mono)">41 columnas</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <h6 style="font-family:var(--serif);font-weight:700;color:var(--primary);margin:1.5rem 0 .75rem">
+                Variables clave utilizadas en el análisis
+            </h6>
+            <div style="overflow-x:auto">
+                <table class="var-table">
+                    <thead><tr>
+                        <th>Variable</th><th>Descripción</th><th>Tipo</th><th>Uso en el análisis</th>
+                    </tr></thead>
+                    <tbody>
+                        <tr><td class="mono">desercion</td><td>Tasa de deserción total (%)</td><td>Numérico</td><td>Variable dependiente principal</td></tr>
+                        <tr><td class="mono">departamento</td><td>Nombre del departamento</td><td>Categórico</td><td>Agrupación geográfica</td></tr>
+                        <tr><td class="mono">ano</td><td>Año del registro</td><td>Numérico</td><td>Agrupación temporal / períodos</td></tr>
+                        <tr><td class="mono">desercion_transicion</td><td>Deserción en Transición (%)</td><td>Numérico</td><td>ANOVA por nivel educativo</td></tr>
+                        <tr><td class="mono">desercion_primaria</td><td>Deserción en Primaria (%)</td><td>Numérico</td><td>ANOVA por nivel educativo</td></tr>
+                        <tr><td class="mono">desercion_secundaria</td><td>Deserción en Secundaria (%)</td><td>Numérico</td><td>ANOVA por nivel educativo</td></tr>
+                        <tr><td class="mono">desercion_media</td><td>Deserción en Media (%)</td><td>Numérico</td><td>ANOVA por nivel educativo</td></tr>
+                        <tr><td class="mono">tasa_matriculacion_5_16</td><td>Tasa de matriculación población 5-16 años</td><td>Numérico</td><td>Indicador complementario</td></tr>
+                        <tr><td class="mono">poblacion_5_16</td><td>Población en edad escolar</td><td>Numérico</td><td>Contexto demográfico</td></tr>
+                        <tr><td class="mono">cobertura_neta</td><td>Cobertura neta del sistema educativo</td><td>Numérico</td><td>Dashboard Power BI</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ 2. PIPELINE DE PROCESAMIENTO ══════════════════════════════ -->
+    <div class="met-section">
+        <div class="met-section-head">
+            <span class="met-section-num">02</span>
+            <i class="fa-solid fa-gears"></i>
+            Pipeline de procesamiento
+        </div>
+        <div class="met-body">
+            <!-- Diagrama de flujo -->
+            <p class="section-eyebrow mb-2">Diagrama de flujo del sistema</p>
+            <div class="flowchart mb-4">
+                <div class="flow-node">
+                    datos.gov.co
+                    <small>API REST</small>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node alt">
+                    Ingesta
+                    <small>ingestion.py</small>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node">
+                    ETL / Limpieza
+                    <small>cleaning.py</small>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node accent">
+                    master_data_final.csv
+                    <small>465 registros</small>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node final">
+                    Power BI
+                    <small>Dashboard</small>
+                </div>
+                <br style="flex-basis:100%;height:0">
+                <div style="flex-basis:100%;text-align:center;color:var(--text-muted);font-size:.8rem;padding:.4rem 0">
+                    ↓ también alimenta
+                </div>
+                <div class="flow-node" style="background:var(--secondary);margin:0 auto">
+                    ANOVA + Tukey
+                    <small>scipy.stats</small>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node" style="background:var(--primary-l)">
+                    Django Web
+                    <small>Vercel</small>
+                </div>
+            </div>
+
+            <div class="row g-3 mt-2">
+                <div class="col-md-6 col-lg-3">
+                    <div class="step-card">
+                        <div class="step-num">01</div>
+                        <h6 style="font-weight:700;font-size:.9rem;color:var(--primary)">Extracción vía API</h6>
+                        <p style="font-size:.82rem;color:var(--text-muted);margin:0">
+                            Módulo <code class="mono" style="font-size:.78rem">ingestion.py</code> consume la API REST
+                            de datos.gov.co con límite de 50.000 registros por llamada, obteniendo los datasets
+                            de deserción escolar e indicadores ICFES.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="step-card">
+                        <div class="step-num" style="background:var(--secondary)">02</div>
+                        <h6 style="font-weight:700;font-size:.9rem;color:var(--primary)">Limpieza y normalización</h6>
+                        <p style="font-size:.82rem;color:var(--text-muted);margin:0">
+                            Módulo <code class="mono" style="font-size:.78rem">cleaning.py</code> estandariza nombres
+                            de departamentos (códigos DANE), corrige tildes, elimina duplicados y convierte
+                            porcentajes a valores numéricos.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="step-card">
+                        <div class="step-num" style="background:var(--accent);color:var(--text)">03</div>
+                        <h6 style="font-weight:700;font-size:.9rem;color:var(--primary)">Consolidación</h6>
+                        <p style="font-size:.82rem;color:var(--text-muted);margin:0">
+                            Módulo <code class="mono" style="font-size:.78rem">main.py</code> orquesta el pipeline
+                            completo, concatena datos reales con proyecciones del modelo y genera el archivo
+                            <code class="mono" style="font-size:.78rem">master_data_final.csv</code>.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="step-card">
+                        <div class="step-num" style="background:var(--success)">04</div>
+                        <h6 style="font-weight:700;font-size:.9rem;color:var(--primary)">Análisis y visualización</h6>
+                        <p style="font-size:.82rem;color:var(--text-muted);margin:0">
+                            Las vistas Django ejecutan los tres ANOVAs con <code class="mono" style="font-size:.78rem">scipy.stats</code>,
+                            generan gráficos con matplotlib y exponen los resultados junto al dashboard Power BI.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ 3. ANÁLISIS ESTADÍSTICO ANOVA ════════════════════════════ -->
+    <div class="met-section">
+        <div class="met-section-head">
+            <span class="met-section-num">03</span>
+            <i class="fa-solid fa-flask"></i>
+            Análisis estadístico ANOVA
+        </div>
+        <div class="met-body">
+            <p>
+                El <strong>ANOVA de un factor</strong> (<em>Analysis of Variance</em>) es un método
+                paramétrico que permite contrastar si las medias de dos o más grupos independientes
+                difieren significativamente. Su estadístico F se calcula como:
+            </p>
+            <div class="math-block">
+                F = (SCE / gl<sub>entre</sub>) / (SCD / gl<sub>dentro</sub>)
+                &nbsp;&nbsp;·&nbsp;&nbsp;
+                Donde: SCE = Suma de cuadrados entre grupos, SCD = Suma de cuadrados dentro de grupos
+            </div>
+            <p>
+                Si el p-valor asociado a F es menor que el nivel de significancia α = 0.05,
+                se rechaza la hipótesis nula. <strong>Criterio de decisión: p-valor &lt; 0.05 → Rechazar H₀.</strong>
+            </p>
+
+            <div class="row g-3 mt-1">
+                <div class="col-md-4">
+                    <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden">
+                        <div style="background:var(--primary);color:white;padding:.6rem 1rem;font-size:.8rem;font-weight:700">ANOVA 01 · Por Región</div>
+                        <div class="math-block" style="margin:0;border:none;border-left:4px solid var(--primary);border-radius:0;font-size:.82rem">
+                            <span class="h-null">H₀: μ_Caribe = μ_Andina = μ_Pacífica = μ_Orinoquia = μ_Amazonia</span><br>
+                            <span class="h-alt">H₁: ∃ i,j : μᵢ ≠ μⱼ</span><br>
+                            <br>
+                            Resultado: <strong>F = 49.08, p &lt; 0.001</strong><br>
+                            Decisión: <strong style="color:var(--secondary)">Rechazar H₀</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden">
+                        <div style="background:var(--primary);color:white;padding:.6rem 1rem;font-size:.8rem;font-weight:700">ANOVA 02 · Por Nivel</div>
+                        <div class="math-block" style="margin:0;border:none;border-left:4px solid var(--secondary);border-radius:0;font-size:.82rem">
+                            <span class="h-null">H₀: μ_Transición = μ_Primaria = μ_Secundaria = μ_Media</span><br>
+                            <span class="h-alt">H₁: ∃ i,j : μᵢ ≠ μⱼ</span><br>
+                            <br>
+                            Resultado: <strong>F = 58.24, p &lt; 0.001</strong><br>
+                            Decisión: <strong style="color:var(--secondary)">Rechazar H₀</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden">
+                        <div style="background:var(--primary);color:white;padding:.6rem 1rem;font-size:.8rem;font-weight:700">ANOVA 03 · Por Período</div>
+                        <div class="math-block" style="margin:0;border:none;border-left:4px solid var(--accent);border-radius:0;font-size:.82rem">
+                            <span class="h-null">H₀: μ_pre = μ_pandemia = μ_post</span><br>
+                            <span class="h-alt">H₁: ∃ i,j : μᵢ ≠ μⱼ</span><br>
+                            <br>
+                            Resultado: <strong>F = 3.82, p = 0.022</strong><br>
+                            Decisión: <strong style="color:var(--secondary)">Rechazar H₀</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h6 style="font-family:var(--serif);font-weight:700;color:var(--primary);margin:1.5rem 0 .75rem">
+                Post-hoc Tukey HSD
+            </h6>
+            <p style="font-size:.9rem;color:var(--text-muted)">
+                Cuando el ANOVA rechaza H₀, el método <strong>Tukey HSD</strong> (<em>Honestly Significant Difference</em>)
+                identifica qué pares de grupos difieren entre sí. Controla la tasa de error Tipo I
+                familiar manteniendo una tasa de error global ≤ α = 0.05. Se implementa mediante
+                la función <code class="mono" style="font-size:.82rem">statsmodels.stats.multicomp.pairwise_tukeyhsd</code>.
+            </p>
+            <a href="/anova/" class="btn-primary-inst" style="font-size:.85rem">
+                <i class="fa-solid fa-arrow-right me-2"></i>Ver resultados completos del ANOVA
+            </a>
+        </div>
+    </div>
+
+    <!-- ══ 4. LIMITACIONES ════════════════════════════════════════════ -->
+    <div class="met-section">
+        <div class="met-section-head">
+            <span class="met-section-num">04</span>
+            <i class="fa-solid fa-shield-halved"></i>
+            Limitaciones y consideraciones éticas
+        </div>
+        <div class="met-body">
+            <div>
+                <div class="limit-item">
+                    <i class="fa-solid fa-circle-info mt-1" style="color:var(--primary);flex-shrink:0"></i>
+                    <div>
+                        <strong>Datos agregados a nivel departamental.</strong>
+                        El análisis opera sobre promedios departamentales anuales, no sobre datos
+                        individuales de estudiantes. Las conclusiones aplican al nivel macro-territorial
+                        y no permiten inferir comportamientos individuales o de instituciones específicas.
+                    </div>
+                </div>
+                <div class="limit-item">
+                    <i class="fa-solid fa-circle-info mt-1" style="color:var(--primary);flex-shrink:0"></i>
+                    <div>
+                        <strong>Proyecciones con margen de error.</strong>
+                        El modelo de regresión lineal produce estimaciones con un margen técnico de
+                        ±0.5 puntos porcentuales. Las proyecciones son indicativas y no sustituyen
+                        el análisis de políticas sectoriales específicas.
+                    </div>
+                </div>
+                <div class="limit-item">
+                    <i class="fa-solid fa-circle-info mt-1" style="color:var(--primary);flex-shrink:0"></i>
+                    <div>
+                        <strong>Supuestos del ANOVA.</strong>
+                        El ANOVA asume normalidad de residuos y homogeneidad de varianzas.
+                        Para muestras grandes (n &gt; 30 por grupo), el teorema central del límite
+                        garantiza robustez del estadístico F ante desviaciones moderadas de normalidad.
+                    </div>
+                </div>
+                <div class="limit-item">
+                    <i class="fa-solid fa-circle-info mt-1" style="color:var(--primary);flex-shrink:0"></i>
+                    <div>
+                        <strong>Uso responsable de datos abiertos.</strong>
+                        Los datos son de acceso público bajo licencia abierta del gobierno colombiano.
+                        No contienen información personal o sensible. El análisis tiene fines
+                        académicos y de política pública, enmarcado en el concurso Datos al Ecosistema 2026.
+                    </div>
+                </div>
+                <div class="limit-item">
+                    <i class="fa-solid fa-circle-info mt-1" style="color:var(--primary);flex-shrink:0"></i>
+                    <div>
+                        <strong>Variables de confusión no controladas.</strong>
+                        Factores como el conflicto armado, las condiciones climáticas, la presencia
+                        de grupos al margen de la ley y la infraestructura vial pueden influir en la
+                        deserción pero no están capturados explícitamente en el dataset analizado.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ 5. REFERENCIAS ════════════════════════════════════════════ -->
+    <div class="met-section">
+        <div class="met-section-head">
+            <span class="met-section-num">05</span>
+            <i class="fa-solid fa-book-open"></i>
+            Referencias
+        </div>
+        <div class="met-body">
+            <div>
+                <div class="ref-item">
+                    <span class="ref-num">[1]</span>
+                    <div>
+                        Ministerio de Educación Nacional de Colombia. (2024).
+                        <em>Tasa de Deserción Escolar por Departamento (2011-2024)</em>.
+                        Datos Abiertos Colombia.
+                        <a href="https://www.datos.gov.co/Educaci-n/Tasa-de-Deserci-n-Escolar/ji8i-4anb"
+                           target="_blank" style="color:var(--primary)">datos.gov.co/ji8i-4anb</a>
+                    </div>
+                </div>
+                <div class="ref-item">
+                    <span class="ref-num">[2]</span>
+                    <div>
+                        Ministerio de Tecnologías de la Información y las Comunicaciones — MinTIC. (2026).
+                        <em>Concurso Datos al Ecosistema 2026</em>.
+                        <a href="https://www.mintic.gov.co" target="_blank" style="color:var(--primary)">www.mintic.gov.co</a>
+                    </div>
+                </div>
+                <div class="ref-item">
+                    <span class="ref-num">[3]</span>
+                    <div>
+                        Virtanen, P. et al. (2020). <em>SciPy 1.0: Fundamental Algorithms for Scientific Computing in Python</em>.
+                        Nature Methods, 17(3), 261–272.
+                        <a href="https://doi.org/10.1038/s41592-019-0686-2" target="_blank" style="color:var(--primary)">doi:10.1038/s41592-019-0686-2</a>
+                    </div>
+                </div>
+                <div class="ref-item">
+                    <span class="ref-num">[4]</span>
+                    <div>
+                        Seabold, S. y Perktold, J. (2010). <em>Statsmodels: Econometric and Statistical Modeling with Python</em>.
+                        Proceedings of the 9th Python in Science Conference.
+                        <a href="https://www.statsmodels.org" target="_blank" style="color:var(--primary)">www.statsmodels.org</a>
+                    </div>
+                </div>
+                <div class="ref-item">
+                    <span class="ref-num">[5]</span>
+                    <div>
+                        Apache Software Foundation. (2024). <em>PySpark — Apache Spark Python API</em>.
+                        <a href="https://spark.apache.org/docs/latest/api/python/" target="_blank" style="color:var(--primary)">spark.apache.org</a>
+                    </div>
+                </div>
+                <div class="ref-item">
+                    <span class="ref-num">[6]</span>
+                    <div>
+                        Microsoft Corporation. (2024). <em>Power BI — Business Intelligence y Visualización de Datos</em>.
+                        <a href="https://powerbi.microsoft.com" target="_blank" style="color:var(--primary)">powerbi.microsoft.com</a>
+                    </div>
+                </div>
+                <div class="ref-item">
+                    <span class="ref-num">[7]</span>
+                    <div>
+                        Django Software Foundation. (2024). <em>Django — The Web Framework for Perfectionists with Deadlines</em>.
+                        <a href="https://www.djangoproject.com" target="_blank" style="color:var(--primary)">djangoproject.com</a>
+                    </div>
+                </div>
+                <div class="ref-item">
+                    <span class="ref-num">[8]</span>
+                    <div>
+                        Universidad Cooperativa de Colombia. (2026).
+                        <em>Sistema de Analítica para la Permanencia Escolar — Sede Pasto</em>.
+                        Proyecto Datos al Ecosistema 2026.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

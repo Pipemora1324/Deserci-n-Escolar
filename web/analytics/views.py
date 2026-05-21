@@ -1,21 +1,16 @@
 import io
 import json
 import math
-import os
 import sys
 import unicodedata
 import base64
 from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods
 
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 import numpy as np
 import pandas as pd
 from django.shortcuts import render
@@ -37,44 +32,6 @@ try:
 except ImportError:
     SCIPY_AVAILABLE = False
 
-try:
-    import anthropic as anthropic_sdk
-    ANTHROPIC_AVAILABLE = True
-except ImportError:
-    ANTHROPIC_AVAILABLE = False
-
-
-CHATBOT_SYSTEM_PROMPT = """Eres un asistente experto en análisis de deserción escolar en Colombia,
-especializado en el proyecto "Datos al Ecosistema 2026" de la Universidad
-Cooperativa de Colombia sede Pasto.
-
-Tienes acceso al análisis completo del proyecto:
-
-DATOS DEL PROYECTO:
-- Dataset: 465 registros, 33 departamentos, años 2011-2024
-- Deserción promedio nacional: 4.07%
-- Total estudiantes analizados en el período
-- Los 5 departamentos con mayor deserción: Guainía (6.86%), Vichada (6.80%),
-  Putumayo (6.14%), Caquetá (6.12%), Vaupés (6.05%)
-- Nariño (donde está la UCC Pasto): deserción en rango medio nacional
-
-RESULTADOS ANOVA:
-- ANOVA por Región: F=49.08, p<0.001 → La Amazonia tiene deserción
-  significativamente mayor (5.91%) que todas las demás regiones
-- ANOVA por Nivel Educativo: F=58.24, p<0.001 → La Secundaria tiene
-  la mayor deserción (5.10%), la Primaria la menor (3.42%)
-- ANOVA por Período: F=3.82, p=0.022 → Durante pandemia bajó a 3.59%
-  (subsidios y retención), en post-pandemia rebotó a 4.34%
-
-TECNOLOGÍA:
-- Procesamiento con PySpark, visualización en Power BI
-- Análisis estadístico con scipy.stats (ANOVA + Tukey HSD)
-- Web en Django desplegada en Vercel
-
-Responde siempre en español, de forma clara y accesible.
-Cuando sea relevante, conecta los datos con políticas educativas reales de Colombia.
-Puedes hacer cálculos simples si te los piden.
-Si no sabes algo específico del proyecto, dilo honestamente."""
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────
@@ -208,25 +165,25 @@ def _diagnostico_desercion(desviacion, margen):
 
 # ── ANOVA helpers ─────────────────────────────────────────────────────────────
 
-DARK_BG = '#0d1117'
-DARK_SURFACE = '#161b22'
-DARK_BORDER = '#30363d'
-DARK_TEXT = '#e6edf3'
-DARK_TEXT_SEC = '#8b949e'
-PALETTE = ['#1a6eb5', '#f5a623', '#3fb950', '#d0021b', '#a371f7', '#58a6ff', '#f78166']
+PLOT_BG      = '#FFFFFF'
+PLOT_SURFACE = '#F4F6F9'
+PLOT_BORDER  = '#DDE3EA'
+PLOT_TEXT    = '#1A1A2E'
+PLOT_TEXT_SEC = '#5A6A7A'
+PALETTE = ['#003366', '#B22222', '#F5A623', '#1B7A4A', '#5B8DB8', '#8B1A1A', '#C8860A']
 
 
-def _setup_dark_fig(figsize=(11, 6)):
+def _setup_fig(figsize=(11, 6)):
     fig, ax = plt.subplots(figsize=figsize)
-    fig.patch.set_facecolor(DARK_BG)
-    ax.set_facecolor(DARK_SURFACE)
-    ax.tick_params(colors=DARK_TEXT, labelsize=9)
-    ax.xaxis.label.set_color(DARK_TEXT)
-    ax.yaxis.label.set_color(DARK_TEXT)
-    ax.title.set_color(DARK_TEXT)
+    fig.patch.set_facecolor(PLOT_BG)
+    ax.set_facecolor(PLOT_SURFACE)
+    ax.tick_params(colors=PLOT_TEXT, labelsize=9)
+    ax.xaxis.label.set_color(PLOT_TEXT)
+    ax.yaxis.label.set_color(PLOT_TEXT)
+    ax.title.set_color(PLOT_TEXT)
     for spine in ax.spines.values():
-        spine.set_edgecolor(DARK_BORDER)
-    ax.grid(axis='y', color=DARK_BORDER, linewidth=0.5, alpha=0.7)
+        spine.set_edgecolor(PLOT_BORDER)
+    ax.grid(axis='y', color=PLOT_BORDER, linewidth=0.7, alpha=1.0)
     ax.set_axisbelow(True)
     return fig, ax
 
@@ -242,51 +199,50 @@ def _fig_to_b64(fig):
 
 
 def _boxplot_b64(groups_data, group_names, title, ylabel):
-    fig, ax = _setup_dark_fig()
+    fig, ax = _setup_fig()
     colors = PALETTE[:len(group_names)]
     bp = ax.boxplot(
         groups_data, patch_artist=True,
         labels=group_names, widths=0.55,
-        medianprops=dict(color='white', linewidth=2),
-        whiskerprops=dict(color=DARK_TEXT_SEC),
-        capprops=dict(color=DARK_TEXT_SEC),
-        flierprops=dict(marker='o', markerfacecolor=DARK_TEXT_SEC,
-                        markeredgecolor=DARK_TEXT_SEC, markersize=4),
+        medianprops=dict(color='#FFFFFF', linewidth=2),
+        whiskerprops=dict(color=PLOT_TEXT_SEC),
+        capprops=dict(color=PLOT_TEXT_SEC),
+        flierprops=dict(marker='o', markerfacecolor=PLOT_TEXT_SEC,
+                        markeredgecolor=PLOT_TEXT_SEC, markersize=4),
     )
     for patch, color in zip(bp['boxes'], colors):
         patch.set_facecolor(color)
-        patch.set_alpha(0.75)
+        patch.set_alpha(0.82)
         patch.set_edgecolor(color)
 
-    # Overlay mean dots
     for i, (data, color) in enumerate(zip(groups_data, colors), start=1):
         mn = np.nanmean(data)
         ax.plot(i, mn, 'D', color='white', markersize=6, zorder=5,
                 markeredgecolor=color, markeredgewidth=1.5)
 
-    ax.set_title(title, fontsize=13, pad=14, color=DARK_TEXT, fontweight='bold')
-    ax.set_ylabel(ylabel, color=DARK_TEXT, fontsize=10)
-    plt.xticks(rotation=15, ha='right', color=DARK_TEXT, fontsize=9)
+    ax.set_title(title, fontsize=13, pad=14, color=PLOT_TEXT, fontweight='bold')
+    ax.set_ylabel(ylabel, color=PLOT_TEXT, fontsize=10)
+    plt.xticks(rotation=15, ha='right', color=PLOT_TEXT, fontsize=9)
     plt.tight_layout()
     return _fig_to_b64(fig)
 
 
 def _barplot_b64(group_names, means, stds, title, ylabel):
-    fig, ax = _setup_dark_fig()
+    fig, ax = _setup_fig()
     x = range(len(group_names))
     colors = PALETTE[:len(group_names)]
-    bars = ax.bar(x, means, color=colors, alpha=0.82, edgecolor=DARK_BORDER,
-                  width=0.55, zorder=3)
-    ax.errorbar(x, means, yerr=stds, fmt='none', color='white',
+    bars = ax.bar(x, means, color=colors, alpha=0.88, edgecolor='white',
+                  width=0.55, zorder=3, linewidth=0.8)
+    ax.errorbar(x, means, yerr=stds, fmt='none', color=PLOT_TEXT_SEC,
                 capsize=5, capthick=1.5, elinewidth=1.5, zorder=4)
     for bar, mean in zip(bars, means):
         ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.05,
                 f'{mean:.2f}%', ha='center', va='bottom',
-                color=DARK_TEXT, fontfamily='monospace', fontsize=9)
+                color=PLOT_TEXT, fontfamily='monospace', fontsize=9)
     ax.set_xticks(list(x))
-    ax.set_xticklabels(group_names, rotation=10, ha='right', color=DARK_TEXT, fontsize=9)
-    ax.set_title(title, fontsize=13, pad=14, color=DARK_TEXT, fontweight='bold')
-    ax.set_ylabel(ylabel, color=DARK_TEXT, fontsize=10)
+    ax.set_xticklabels(group_names, rotation=10, ha='right', color=PLOT_TEXT, fontsize=9)
+    ax.set_title(title, fontsize=13, pad=14, color=PLOT_TEXT, fontweight='bold')
+    ax.set_ylabel(ylabel, color=PLOT_TEXT, fontsize=10)
     plt.tight_layout()
     return _fig_to_b64(fig)
 
@@ -745,63 +701,5 @@ def anova_view(request):
 
 # ── chatbot views ─────────────────────────────────────────────────────────────
 
-def chatbot_page(request):
-    return render(request, 'chatbot.html')
-
-
-@csrf_exempt
-@require_http_methods(["POST"])
-def chat_api(request):
-    if not ANTHROPIC_AVAILABLE:
-        return JsonResponse(
-            {'error': 'SDK de Anthropic no disponible en el servidor.'}, status=503
-        )
-
-    try:
-        data = json.loads(request.body)
-    except (json.JSONDecodeError, ValueError):
-        return JsonResponse({'error': 'JSON inválido.'}, status=400)
-
-    user_message = data.get('message', '').strip()
-    history = data.get('history', [])
-
-    if not user_message:
-        return JsonResponse({'error': 'Mensaje vacío.'}, status=400)
-
-    api_key = os.environ.get('ANTHROPIC_API_KEY', '')
-    if not api_key:
-        return JsonResponse({
-            'response': (
-                'La API key de Anthropic no está configurada en el servidor. '
-                'Contacta al administrador para agregar la variable ANTHROPIC_API_KEY.'
-            )
-        })
-
-    try:
-        client = anthropic_sdk.Anthropic(api_key=api_key)
-
-        messages = []
-        for msg in history[-10:]:
-            role = msg.get('role', '')
-            content = msg.get('content', '')
-            if role in ('user', 'assistant') and content:
-                messages.append({'role': role, 'content': content})
-        messages.append({'role': 'user', 'content': user_message})
-
-        response = client.messages.create(
-            model='claude-sonnet-4-6',
-            max_tokens=1024,
-            system=CHATBOT_SYSTEM_PROMPT,
-            messages=messages,
-        )
-        return JsonResponse({'response': response.content[0].text})
-
-    except anthropic_sdk.AuthenticationError:
-        return JsonResponse({'response': 'API key inválida. Verifica la configuración.'})
-    except anthropic_sdk.RateLimitError:
-        return JsonResponse({
-            'response': 'Límite de uso de la API alcanzado. Intenta en unos minutos.'
-        })
-    except Exception as exc:
-        print(f"Error en chat_api: {exc}")
-        return JsonResponse({'response': f'Error del servidor: {exc}'}, status=500)
+def metodologia(request):
+    return render(request, 'metodologia.html')
