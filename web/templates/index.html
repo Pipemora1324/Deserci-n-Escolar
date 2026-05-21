@@ -1,383 +1,533 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análisis de Permanencia Educativa | Enfoque en Datos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@400;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --primary-navy: #002e5d;
-            --accent-red: #d9534f;
-            --data-blue: #00d4ff;
-            --light-grey: #f1f4f9;
-        }
+{% extends 'base.html' %}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--light-grey);
-            color: #2b2d42;
-        }
+{% block title %}Deserción Escolar Colombia | Analítica Educativa{% endblock %}
+{% block nav_home %}active{% endblock %}
 
-        .tech-header {
-            background: white;
-            padding: 15px 0;
-            border-bottom: 2px solid #ddd;
-        }
+{% block extra_styles %}
+/* ── HERO ───────────────────────────────────────── */
+.hero {
+    padding: 5rem 0 3rem;
+    background: radial-gradient(ellipse at 60% 0%, rgba(26,110,181,0.12) 0%, transparent 65%);
+    border-bottom: 1px solid var(--border);
+}
 
-        .problem-hero {
-            background: #fff;
-            padding: 80px 0;
-            border-bottom: 1px solid #eee;
-        }
+.hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 1rem 0;
+}
 
-        .metric-box {
-            background: var(--primary-navy);
-            color: white;
-            padding: 40px;
-            border-radius: 4px;
-            margin-top: -50px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-        }
+.hero h1 .accent {
+    background: linear-gradient(90deg, #58a6ff, #f5a623);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
 
-        .metric-value {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 3rem;
-            font-weight: 700;
-        }
+.hero p.lead-text {
+    font-size: 1.05rem;
+    color: var(--text-sec);
+    max-width: 560px;
+    line-height: 1.7;
+}
 
-        .solution-card {
-            background: white;
-            border: 1px solid #e0e0e0;
-            padding: 30px;
-            height: 100%;
-            border-left: 5px solid #007bff;
-        }
+.terminal-tag {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--green);
+    background: rgba(63,185,80,0.08);
+    border: 1px solid rgba(63,185,80,0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
 
-        /* ESTILO CAJA IA */
-        .ai-insights-box {
-            background: #001a35;
-            color: #00d4ff;
-            border-radius: 15px;
-            padding: 40px;
-            font-family: 'Roboto Mono', monospace;
-            border: 1px solid #00d4ff;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
-        }
+/* ── KPI STRIP ──────────────────────────────────── */
+.kpi-strip {
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--border);
+}
 
-        .ai-cursor {
-            display: inline-block;
-            width: 10px;
-            height: 20px;
-            background: #00d4ff;
-            animation: blink 1s infinite;
-        }
+.kpi-card {
+    text-align: center;
+    padding: 1.8rem 1rem;
+    position: relative;
+    overflow: hidden;
+}
 
-        @keyframes blink { 50% { opacity: 0; } }
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 60%; height: 2px;
+    border-radius: 0 0 4px 4px;
+}
 
-        .dashboard-section {
-            background: #f8f9fa;
-            padding: 60px 0;
-        }
+.kpi-card.blue::before  { background: var(--blue-light); }
+.kpi-card.orange::before { background: var(--orange); }
+.kpi-card.green::before  { background: var(--green); }
+.kpi-card.purple::before { background: var(--purple); }
 
-        .iframe-container {
-            background: white;
-            padding: 10px;
-            border: 1px solid #ccc;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
+.kpi-value { transition: opacity 0.3s; }
 
-        .evidence-band {
-            background: white;
-            border-top: 1px solid #e5e8ef;
-            border-bottom: 1px solid #e5e8ef;
-        }
+/* ── QUICK ACCESS ────────────────────────────────── */
+.quick-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.8rem;
+    height: 100%;
+    text-decoration: none;
+    display: block;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
 
-        .policy-kicker {
-            font-family: 'Roboto Mono', monospace;
-            color: var(--primary-navy);
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 700;
-        }
+.quick-card:hover {
+    border-color: var(--blue);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(26,110,181,0.15);
+    text-decoration: none;
+}
 
-        .impact-panel, .pipeline-step {
-            background: #ffffff;
-            border: 1px solid #dfe5ee;
-            padding: 28px;
-            height: 100%;
-            transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-        }
+.quick-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
 
-        .impact-panel {
-            border-left: 5px solid var(--primary-navy);
-        }
+.quick-card h5 { color: var(--text); font-weight: 700; font-size: 1rem; margin-bottom: 0.4rem; }
+.quick-card p  { color: var(--text-sec); font-size: 0.84rem; margin: 0; }
 
-        .impact-panel:hover, .pipeline-step:hover {
-            transform: translateY(-4px);
-            border-color: #b6c4d8;
-            box-shadow: 0 14px 30px rgba(0, 46, 93, 0.10);
-        }
+/* ── TOP RIESGO ─────────────────────────────────── */
+.riesgo-num {
+    font-family: var(--mono);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--orange);
+}
 
-        .pipeline-step {
-            background: #f8fafd;
-        }
+.riesgo-bar {
+    height: 3px;
+    background: rgba(245,166,35,0.15);
+    border-radius: 2px;
+    margin-top: 0.3rem;
+    overflow: hidden;
+}
 
-        .step-number {
-            width: 36px;
-            height: 36px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--primary-navy);
-            color: white;
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 700;
-            margin-bottom: 14px;
-        }
+.riesgo-bar-fill {
+    height: 100%;
+    background: var(--orange);
+    border-radius: 2px;
+}
 
-        .powerbi-reading {
-            background: white;
-            border: 1px solid #dfe5ee;
-            padding: 34px;
-            height: 100%;
-        }
+/* ── AI CONSOLE ─────────────────────────────────── */
+.ai-console {
+    background: #010409;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    font-family: var(--mono);
+    min-height: 200px;
+    position: relative;
+}
 
-        .powerbi-fact {
-            border-left: 4px solid var(--primary-navy);
-            padding-left: 18px;
-            margin-top: 22px;
-        }
+.console-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
 
-        .method-note {
-            background: #001a35;
-            color: white;
-            padding: 34px;
-            border-left: 5px solid var(--data-blue);
-        }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-r { background: #ff5f57; }
+.dot-y { background: #febc2e; }
+.dot-g { background: #28c840; }
 
-        .method-note strong,
-        .method-note .policy-kicker {
-            color: var(--data-blue);
-        }
+.console-status {
+    font-size: 0.68rem;
+    color: var(--green);
+    margin-left: auto;
+}
 
-        @media (max-width: 768px) {
-            .metric-value {
-                font-size: 2.1rem;
-            }
-        }
-    </style>
-</head>
-<body>
+.console-body {
+    font-size: 0.84rem;
+    line-height: 1.6;
+    color: #58a6ff;
+    min-height: 100px;
+}
 
-    <nav class="tech-header">
-        <div class="container d-flex justify-content-between">
-            <span class="fw-bold text-uppercase">Plataforma Nacional de Datos | <span class="text-muted">Análisis Educativo</span></span>
-            <span class="badge bg-dark text-uppercase" style="letter-spacing: 1px;">Vigencia {{ periodo_analizado }}</span>
-        </div>
-    </nav>
+.console-prompt { color: var(--green); margin-right: 0.5rem; }
+.cursor {
+    display: inline-block;
+    width: 8px; height: 14px;
+    background: var(--blue-light);
+    animation: blink 1s infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+}
+@keyframes blink { 50% { opacity: 0; } }
 
-    <section class="problem-hero">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-7">
-                    <h1 class="display-4 fw-800 my-3">La Deserción Escolar como <br>Barrera de Desarrollo.</h1>
-                    <p class="lead text-muted">A través del análisis masivo de datos, identificamos que el abandono escolar no es un evento aislado, sino un patrón sistémico que requiere intervención basada en evidencia regional.</p>
-                    <p class="text-muted">Esta plataforma convierte registros educativos oficiales en una lectura territorial para orientar permanencia, becas, transporte, conectividad y acompañamiento académico donde el riesgo es mayor.</p>
+/* ── DASHBOARD SECTION ───────────────────────────── */
+.dashboard-section {
+    padding: 4rem 0;
+    border-top: 1px solid var(--border);
+}
+
+.iframe-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* ── HALLAZGO BANNER ─────────────────────────────── */
+.hallazgo {
+    background: rgba(208,2,27,0.06);
+    border: 1px solid rgba(208,2,27,0.2);
+    border-left: 3px solid var(--red);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    font-size: 0.88rem;
+}
+{% endblock %}
+
+{% block content %}
+
+<!-- ── HERO ─────────────────────────────────────────────────────── -->
+<section class="hero">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div class="terminal-tag">
+                    <i class="fa-solid fa-circle-dot me-1"></i> Datos al Ecosistema 2026 · UCC Pasto
                 </div>
-                <div class="col-lg-5">
-                    <div class="p-4 bg-light border border-start-0 border-end-0">
-                        <h6 class="fw-bold text-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i> Hallazgo de Investigación</h6>
-                        <p class="small m-0">El promedio nacional de {{ promedio }}% en {{ ultimo_ano }} esconde disparidades críticas. {{ depto_critico }} registra {{ valor_depto_critico }}%, por encima del comportamiento esperado por el modelo.</p>
-                    </div>
+                <h1>
+                    La Deserción Escolar<br>
+                    <span class="accent">en Colombia</span>
+                </h1>
+                <p class="lead-text">
+                    Análisis estadístico de <strong style="color:var(--text)">{{ total_registros }}</strong> registros
+                    históricos en <strong style="color:var(--text)">{{ total_departamentos }}</strong> departamentos
+                    durante el período <strong style="color:var(--text)">{{ periodo_analizado }}</strong>.
+                    Datos procesados con PySpark, visualizados con Power BI y validados con ANOVA.
+                </p>
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    <a href="#dashboard" class="btn-blue">
+                        <i class="fa-solid fa-chart-bar me-2"></i>Ver Dashboard
+                    </a>
+                    <a href="/anova/" class="btn-ghost">
+                        <i class="fa-solid fa-flask me-2"></i>Análisis ANOVA
+                    </a>
+                    <a href="/chatbot/" class="btn-ghost">
+                        <i class="fa-solid fa-robot me-2"></i>Chatbot IA
+                    </a>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <div class="container">
-        <div class="metric-box">
-            <div class="row text-center">
-                <div class="col-md-4">
-                    <div class="metric-value">{{ promedio }}%</div>
-                    <div class="small opacity-75">TASA DE DESERCIÓN NACIONAL</div>
-                </div>
-                <div class="col-md-4">
-                    <div class="metric-value">{{ total_estudiantes }}</div>
-                    <div class="small opacity-75">DATOS PROCESADOS (ÚLTIMO PERIODO)</div>
-                </div>
-                <div class="col-md-4">
-                    <div class="metric-value">{{ prediccion_ia }}%</div>
-                    <div class="small opacity-75">PROYECCIÓN IA {{ ano_prediccion }}</div>
+            <div class="col-lg-5">
+                <div class="hallazgo">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="fa-solid fa-triangle-exclamation c-red"></i>
+                        <strong class="c-red" style="font-size:.8rem;text-transform:uppercase;letter-spacing:.5px">
+                            Hallazgo crítico
+                        </strong>
+                    </div>
+                    <p class="mb-0" style="font-size:.9rem;color:var(--text)">
+                        El promedio nacional de <strong>{{ promedio }}%</strong> en {{ ultimo_ano }}
+                        oculta disparidades territoriales críticas.
+                        <strong>{{ depto_critico }}</strong> registra <strong>{{ valor_depto_critico }}%</strong>
+                        — casi el doble del promedio.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
+</section>
 
-    <section class="evidence-band py-5">
-        <div class="container">
-            <div class="row align-items-center g-4">
-                <div class="col-lg-5">
-                    <div class="policy-kicker mb-2">Evidencia para decisión pública</div>
-                    <h2 class="fw-bold mb-3">No es solo visualizar datos: es priorizar intervenciones.</h2>
-                    <p class="text-muted mb-0">Con la base depurada se consolidaron {{ total_registros }} observaciones históricas de {{ total_departamentos }} departamentos entre {{ periodo_analizado }}. El tablero permite ubicar territorios con mayor deserción, comparar matrícula y anticipar riesgo con una proyección nacional.</p>
+<!-- ── KPI STRIP ─────────────────────────────────────────────────── -->
+<section class="kpi-strip">
+    <div class="container">
+        <div class="row g-3">
+            <div class="col-6 col-md-3">
+                <div class="card-dark kpi-card orange">
+                    <div class="kpi-value c-orange" id="kpi1">{{ promedio }}%</div>
+                    <div class="kpi-label">Tasa deserción nacional</div>
                 </div>
-                <div class="col-lg-7">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <div class="impact-panel">
-                                <div class="policy-kicker">Cobertura territorial</div>
-                                <h3 class="fw-bold my-2">{{ total_departamentos }}</h3>
-                                <p class="small text-muted mb-0">Departamentos normalizados con nombres oficiales, tildes y ubicación lista para mapa.</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card-dark kpi-card blue">
+                    <div class="kpi-value c-blue" id="kpi2">10M+</div>
+                    <div class="kpi-label">Estudiantes analizados</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card-dark kpi-card green">
+                    <div class="kpi-value c-green">{{ total_departamentos }}</div>
+                    <div class="kpi-label">Departamentos analizados</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card-dark kpi-card purple">
+                    <div class="kpi-value c-purple" style="font-size:2rem;">2011–2024</div>
+                    <div class="kpi-label">Período de datos</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── ACCESO RÁPIDO ──────────────────────────────────────────────── -->
+<section class="py-5" style="border-bottom:1px solid var(--border)">
+    <div class="container">
+        <div class="eyebrow mb-2">Explorar el proyecto</div>
+        <h2 class="section-title mb-4">Tres herramientas de análisis</h2>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <a href="/#dashboard" class="quick-card">
+                    <div class="quick-icon" style="background:rgba(26,110,181,0.15)">
+                        <i class="fa-solid fa-chart-bar" style="color:var(--blue-light)"></i>
+                    </div>
+                    <h5>Dashboard Power BI</h5>
+                    <p>Visualización interactiva de tasas de deserción por departamento, año y nivel educativo con filtros dinámicos.</p>
+                    <div class="mt-3 d-flex align-items-center gap-1" style="font-size:.8rem;color:var(--blue-light)">
+                        Ver dashboard <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="/anova/" class="quick-card">
+                    <div class="quick-icon" style="background:rgba(245,166,35,0.15)">
+                        <i class="fa-solid fa-flask" style="color:var(--orange)"></i>
+                    </div>
+                    <h5>Análisis ANOVA</h5>
+                    <p>Pruebas estadísticas de diferencias de medias por región geográfica, nivel educativo y período histórico.</p>
+                    <div class="mt-3 d-flex align-items-center gap-1" style="font-size:.8rem;color:var(--orange)">
+                        Ver análisis <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="/chatbot/" class="quick-card">
+                    <div class="quick-icon" style="background:rgba(63,185,80,0.15)">
+                        <i class="fa-solid fa-robot" style="color:var(--green)"></i>
+                    </div>
+                    <h5>Chatbot IA</h5>
+                    <p>Asistente inteligente especializado en deserción escolar colombia: datos, hallazgos, políticas y análisis.</p>
+                    <div class="mt-3 d-flex align-items-center gap-1" style="font-size:.8rem;color:var(--green)">
+                        Iniciar conversación <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── TOP 5 RIESGO + CONSOLA IA ──────────────────────────────────── -->
+<section class="py-5" style="border-bottom:1px solid var(--border)">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Top 5 -->
+            <div class="col-lg-5">
+                <div class="eyebrow mb-2">Alerta territorial</div>
+                <h2 class="section-title mb-1">Top 5 departamentos</h2>
+                <p class="section-sub mb-4">Mayor tasa de deserción en el último período analizado.</p>
+                {% if top_riesgo %}
+                <div class="card-dark p-0" style="overflow:hidden">
+                    {% for item in top_riesgo %}
+                    <div class="p-3" style="border-bottom:{% if not forloop.last %}1px solid var(--border){% else %}none{% endif %}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <span class="eyebrow" style="font-size:.62rem">#{{ forloop.counter }}</span>
+                                <div style="font-weight:600;margin-top:.2rem">{{ item.departamento }}</div>
+                                {% if item.matricula != 'N/D' %}
+                                <div style="font-size:.75rem;color:var(--text-sec)">
+                                    Matrícula 5-16: {{ item.matricula }}%
+                                </div>
+                                {% endif %}
                             </div>
+                            <div class="riesgo-num">{{ item.desercion }}%</div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="impact-panel">
-                                <div class="policy-kicker">Matrícula 5-16</div>
-                                <h3 class="fw-bold my-2">{{ promedio_matricula }}%</h3>
-                                <p class="small text-muted mb-0">Promedio territorial observado en el último periodo limpio.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="impact-panel">
-                                <div class="policy-kicker">Mejor señal</div>
-                                <h3 class="fw-bold my-2">{{ valor_depto_destacado }}%</h3>
-                                <p class="small text-muted mb-0">{{ depto_destacado }} presenta la deserción más baja del último periodo.</p>
-                            </div>
+                        <div class="riesgo-bar mt-2">
+                            <div class="riesgo-bar-fill" style="width:{{ item.bar_pct }}%"></div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
+                {% endif %}
             </div>
-        </div>
-    </section>
 
-    <section class="container py-5">
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <div class="pipeline-step">
-                    <span class="step-number">01</span>
-                    <h5 class="fw-bold">Descarga e integración</h5>
-                    <p class="text-muted mb-0">Se consolidan datos educativos territoriales y resultados académicos en una fuente maestra para análisis nacional.</p>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="pipeline-step">
-                    <span class="step-number">02</span>
-                    <h5 class="fw-bold">Limpieza y estandarización</h5>
-                    <p class="text-muted mb-0">Se corrigen departamentos, tildes, duplicados, tipos numéricos y la columna Ubicacion Completa para Power BI.</p>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="pipeline-step">
-                    <span class="step-number">03</span>
-                    <h5 class="fw-bold">Inferencia y visualización</h5>
-                    <p class="text-muted mb-0">La IA compara cada departamento contra la proyección nacional y el mapa permite explorar el comportamiento territorial.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+            <!-- Consola IA -->
+            <div class="col-lg-7">
+                <div class="eyebrow mb-2">Consultor estratégico</div>
+                <h2 class="section-title mb-1">Diagnóstico por departamento</h2>
+                <p class="section-sub mb-4">Selecciona un departamento para ver el diagnóstico del modelo.</p>
 
-    <section class="container py-5 mt-5">
-        <div class="row mb-4">
-            <div class="col-lg-5">
-                <h2 class="fw-bold mb-3">Consultor de Estrategia IA</h2>
-                <p class="text-muted">Seleccione una región para generar conclusiones automáticas basadas en el modelo de regresión y análisis multivariado.</p>
-                
-                <select id="deptSelector" class="form-select form-select-lg mb-4 border-primary">
-                    <option value="General">-- Seleccionar Región --</option>
+                <select id="deptSelector" class="mb-3" style="
+                    background:var(--surface); color:var(--text); border:1px solid var(--border);
+                    border-radius:8px; padding:.6rem 1rem; font-size:.88rem; width:100%;
+                    appearance:none; cursor:pointer;">
+                    <option value="General">— Seleccionar departamento —</option>
                     {% for dept in departamentos %}
-                        <option value="{{ dept }}">{{ dept }}</option>
+                    <option value="{{ dept }}">{{ dept }}</option>
                     {% endfor %}
                 </select>
-            </div>
 
-            <div class="col-lg-7">
-                <div class="ai-insights-box">
-                    <div id="ai-status" class="mb-2 text-white-50 small" style="font-size: 0.7rem;">> SISTEMA EN ESPERA...</div>
-                    <div class="mt-2">
-                        <strong id="ai-dept-name" class="text-white">REPORTE CONSOLIDADO:</strong><br>
-                        <span id="ai-conclusion" style="font-size: 1.1rem;">"Seleccione un departamento para iniciar el diagnóstico técnico."</span>
+                <div class="ai-console">
+                    <div class="console-header">
+                        <div class="dot dot-r"></div>
+                        <div class="dot dot-y"></div>
+                        <div class="dot dot-g"></div>
+                        <span style="font-size:.7rem;color:var(--text-sec);margin-left:.5rem">diagnóstico-ia.py</span>
+                        <span class="console-status">● ONLINE</span>
                     </div>
-                    <div class="mt-4 small text-white-50">> STATUS: ONLINE <span class="ai-cursor"></span></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="container pb-5">
-        <div class="row g-4 align-items-stretch">
-            <div class="col-lg-7">
-                <div class="powerbi-reading">
-                    <div class="policy-kicker mb-2">Lectura Power BI</div>
-                    <h3 class="fw-bold mb-3">La deserción alta también es una alerta social.</h3>
-                    <p class="text-muted">El tablero muestra que el promedio nacional de deserción en {{ ultimo_ano }} es {{ promedio }}%, pero algunos territorios se ubican muy por encima de esa referencia. El caso más crítico en el último periodo es {{ depto_critico }}, con {{ valor_depto_critico }}%.</p>
-                    <p class="text-muted mb-0">Cuando un estudiante abandona el sistema educativo aumenta su exposición a trayectorias de informalidad, baja empleabilidad y vulnerabilidad frente a economías ilegales o violencia territorial. Por eso el dato no debe leerse solo como matrícula perdida, sino como una señal temprana para activar permanencia, acompañamiento psicosocial, transporte y conectividad.</p>
-
-                    <div class="powerbi-fact">
-                        <strong>Dato del modelo:</strong>
-                        <span class="text-muted">la IA proyecta {{ prediccion_ia }}% para {{ ano_prediccion }} y usa un margen técnico de +/-{{ margen_modelo }} puntos para separar riesgo, estabilidad y resultados favorables.</span>
-                    </div>
-                    <div class="powerbi-fact">
-                        <strong>Dato del tablero:</strong>
-                        <span class="text-muted">{{ depto_destacado }} aparece con la deserción más baja del último periodo: {{ valor_depto_destacado }}%. Ese comportamiento sirve como referencia para comparar territorios con mayor presión de abandono.</span>
+                    <div class="console-body" id="console-body">
+                        <span class="console-prompt">›</span>
+                        <span id="ai-output">Selecciona un departamento para iniciar el diagnóstico.</span>
+                        <span class="cursor"></span>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5">
-                <div class="method-note h-100">
-                    <div class="policy-kicker mb-2">Lectura del modelo</div>
-                    <h3 class="fw-bold mb-3">La IA funciona como un semáforo técnico.</h3>
-                    <p>El sistema no inventa conclusiones: toma la deserción real de {{ ultimo_ano }}, la compara contra la proyección nacional de {{ prediccion_ia }}% para {{ ano_prediccion }} y clasifica cada territorio con un margen de +/-{{ margen_modelo }} puntos.</p>
-                    <p>La lectura correcta es preventiva: una deserción baja indica mayor permanencia escolar; una deserción alta señala estudiantes fuera del sistema y mayor necesidad de intervención institucional.</p>
-                    <p class="mb-0"><strong>Uso esperado:</strong> priorizar acompañamiento, becas, transporte, conectividad, alertas tempranas y rutas psicosociales en los departamentos que superan el umbral de riesgo.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── PIPELINE ────────────────────────────────────────────────────── -->
+<section class="py-5" style="border-bottom:1px solid var(--border)">
+    <div class="container">
+        <div class="eyebrow mb-2">Arquitectura técnica</div>
+        <h2 class="section-title mb-4">Pipeline de datos</h2>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="card-dark h-100">
+                    <div class="mono c-blue mb-2" style="font-size:.72rem">01 / INGESTA</div>
+                    <h6 style="font-weight:700">API datos.gov.co</h6>
+                    <p style="font-size:.84rem;color:var(--text-sec);margin:0">
+                        Extracción automatizada del dataset de deserción escolar (ji8i-4anb) con 50.000 registros por consulta.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-dark h-100">
+                    <div class="mono c-orange mb-2" style="font-size:.72rem">02 / LIMPIEZA</div>
+                    <h6 style="font-weight:700">PySpark + Pandas</h6>
+                    <p style="font-size:.84rem;color:var(--text-sec);margin:0">
+                        Normalización de departamentos, eliminación de duplicados, corrección de tildes y estandarización de tipos numéricos.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-dark h-100">
+                    <div class="mono c-green mb-2" style="font-size:.72rem">03 / ANÁLISIS</div>
+                    <h6 style="font-weight:700">ANOVA + Tukey HSD</h6>
+                    <p style="font-size:.84rem;color:var(--text-sec);margin:0">
+                        Pruebas estadísticas con scipy.stats para detectar diferencias significativas por región, nivel y período.
+                    </p>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="dashboard-section border-top">
-        <div class="container text-center">
-            <h2 class="fw-bold mb-4 text-uppercase">Consola de Diagnóstico Interactivo</h2>
-            <div class="iframe-container">
-                <iframe id="powerbiFrame" title="Dashboard" width="100%" height="750" src="{{ powerbi_embed_url }}" frameborder="0" allowFullScreen="true"></iframe>
+<!-- ── DASHBOARD POWER BI ─────────────────────────────────────────── -->
+<section class="dashboard-section" id="dashboard">
+    <div class="container">
+        <div class="eyebrow mb-2">Visualización interactiva</div>
+        <h2 class="section-title mb-1">Dashboard Power BI</h2>
+        <p class="section-sub mb-4">
+            Promedio nacional {{ promedio }}% en {{ ultimo_ano }} · Peor caso: {{ depto_critico }} ({{ valor_depto_critico }}%)
+            · Mejor caso: {{ depto_destacado }} ({{ valor_depto_destacado }}%)
+        </p>
+        <div class="iframe-wrap">
+            <iframe id="powerbiFrame" title="Dashboard Deserción Escolar Colombia"
+                    width="100%" height="760"
+                    src="{{ powerbi_embed_url }}"
+                    frameborder="0" allowFullScreen="true">
+            </iframe>
+        </div>
+        <div class="row g-3 mt-3">
+            <div class="col-md-6">
+                <div class="card-dark" style="border-left:3px solid var(--blue-light)">
+                    <div class="mono c-blue" style="font-size:.7rem;margin-bottom:.5rem">PROYECCIÓN IA</div>
+                    <p style="font-size:.88rem;color:var(--text-sec);margin:0">
+                        El modelo de regresión lineal proyecta <strong style="color:var(--text)">{{ prediccion_ia }}%</strong>
+                        para {{ ano_prediccion }}, con un margen técnico de ±{{ margen_modelo }} puntos para clasificar
+                        departamentos en riesgo, estabilidad o éxito.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-dark" style="border-left:3px solid var(--orange)">
+                    <div class="mono c-orange" style="font-size:.7rem;margin-bottom:.5rem">LECTURA TERRITORIAL</div>
+                    <p style="font-size:.88rem;color:var(--text-sec);margin:0">
+                        La Amazonia concentra los mayores índices de deserción. El contexto socioeconómico,
+                        la dispersión geográfica y la limitada conectividad son factores determinantes.
+                        El tablero permite filtrar por territorio y comparar cobertura vs deserción.
+                    </p>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <footer class="py-5 text-center bg-white border-top">
-        <div class="container">
-            <p class="mb-1 fw-bold">SISTEMA NACIONAL DE ANALÍTICA EDUCATIVA | COLOMBIA 2026</p>
-            <p class="text-muted small">Desarrollado mediante Arquitectura PySpark y Visualización Avanzada.</p>
-        </div>
-    </footer>
+{% endblock %}
 
-    <script>
-        // Arreglo para que VS Code no marque error
-        const insights = JSON.parse('{{ ia_insights_json|safe }}');
-        
-        const selector = document.getElementById('deptSelector');
-        const conclusionText = document.getElementById('ai-conclusion');
-        const deptName = document.getElementById('ai-dept-name');
-        const statusText = document.getElementById('ai-status');
-        selector.addEventListener('change', function() {
-            const selected = this.value;
-            
-            statusText.innerText = "> PROCESANDO DATOS DE " + selected.toUpperCase() + "...";
-            conclusionText.innerText = "Consultando base de datos...";
-            
-            setTimeout(() => {
-                statusText.innerText = "> ANÁLISIS COMPLETADO";
-                deptName.innerText = "DIAGNÓSTICO PARA " + selected.toUpperCase() + ":";
-                
-                const resultado = insights[selected] || "Se detectan patrones estándar. Se recomienda fortalecer el programa de alimentación escolar y transporte rural en zonas dispersas.";
-                conclusionText.innerText = resultado;
-            }, 600);
-        });
-    </script>
-</body>
-</html>
+{% block extra_scripts %}
+<script>
+const insights = JSON.parse('{{ ia_insights_json|safe }}');
+const selector = document.getElementById('deptSelector');
+const output   = document.getElementById('ai-output');
+
+function typeText(text, delay = 18) {
+    output.textContent = '';
+    let i = 0;
+    const timer = setInterval(() => {
+        if (i < text.length) { output.textContent += text[i++]; }
+        else clearInterval(timer);
+    }, delay);
+}
+
+selector.addEventListener('change', function () {
+    const dept = this.value;
+    output.textContent = 'Consultando base de datos...';
+    setTimeout(() => {
+        const msg = insights[dept] || 'No se encontró diagnóstico para este departamento.';
+        typeText(msg);
+    }, 400);
+});
+
+// Animate KPI counters
+function animateCount(el, target, decimals, suffix) {
+    const duration = 1800;
+    const start = performance.now();
+    const startVal = 0;
+    (function update(now) {
+        const p = Math.min((now - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        const val = startVal + (target - startVal) * ease;
+        el.textContent = (decimals > 0 ? val.toFixed(decimals) : Math.floor(val).toLocaleString('es-CO')) + suffix;
+        if (p < 1) requestAnimationFrame(update);
+    })(start);
+}
+
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            const kpi1 = document.getElementById('kpi1');
+            const kpi2 = document.getElementById('kpi2');
+            if (kpi1) animateCount(kpi1, parseFloat('{{ promedio }}') || 4.07, 2, '%');
+            if (kpi2) animateCount(kpi2, 10, 0, 'M+');
+            observer.disconnect();
+        }
+    });
+}, { threshold: 0.3 });
+
+const kpiSection = document.querySelector('.kpi-strip');
+if (kpiSection) observer.observe(kpiSection);
+</script>
+{% endblock %}
