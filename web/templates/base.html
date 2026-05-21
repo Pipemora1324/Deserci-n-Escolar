@@ -4,66 +4,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Deserción Escolar Colombia{% endblock %}</title>
+    <title>{% block title %}Analítica Deserción Escolar | Colombia{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+Pro:wght@400;600;700&family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ── VARIABLES INSTITUCIONALES ────────────────────── */
         :root {
-            --bg: #0d1117;
-            --surface: #161b22;
-            --surface2: #1c2128;
-            --border: #30363d;
-            --blue: #1a6eb5;
-            --blue-light: #58a6ff;
-            --orange: #f5a623;
-            --red: #d0021b;
-            --green: #3fb950;
-            --purple: #a371f7;
-            --text: #e6edf3;
-            --text-sec: #8b949e;
-            --mono: 'Roboto Mono', monospace;
+            --primary:    #003366;
+            --primary-d:  #002244;
+            --primary-l:  #1a5fa8;
+            --secondary:  #B22222;
+            --accent:     #F5A623;
+            --success:    #1B7A4A;
+            --bg:         #F4F6F9;
+            --bg-card:    #FFFFFF;
+            --text:       #1A1A2E;
+            --text-muted: #5A6A7A;
+            --border:     #DDE3EA;
+            --shadow:     0 2px 8px rgba(0,51,102,0.08);
+            --shadow-md:  0 4px 16px rgba(0,51,102,0.12);
+            --serif:      'Merriweather', Georgia, serif;
+            --sans:       'Source Sans Pro', 'Segoe UI', sans-serif;
+            --mono:       'Roboto Mono', 'Courier New', monospace;
         }
 
         *, *::before, *::after { box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: var(--sans);
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
-            min-height: 100vh;
+            font-size: 15px;
+            line-height: 1.6;
         }
 
+        /* ── FRANJA SUPERIOR ──────────────────────────────── */
+        .gov-strip {
+            background: var(--primary);
+            color: rgba(255,255,255,0.92);
+            padding: 0.28rem 2rem;
+            font-size: 0.72rem;
+            font-family: var(--sans);
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .gov-strip a {
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .gov-strip a:hover { color: white; }
+
         /* ── NAVBAR ───────────────────────────────────────── */
-        .dark-nav {
-            background: rgba(13, 17, 23, 0.97);
+        .inst-nav {
+            background: var(--bg-card);
             border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
             padding: 0 2rem;
-            height: 58px;
+            height: 66px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky;
             top: 0;
             z-index: 1000;
-            backdrop-filter: blur(10px);
         }
 
         .nav-brand {
-            font-family: var(--mono);
-            font-size: 0.74rem;
-            font-weight: 700;
-            color: var(--blue-light);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
             text-decoration: none;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
         }
 
-        .nav-brand:hover { color: var(--blue-light); text-decoration: none; }
+        .brand-escudo {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .brand-title {
+            font-family: var(--serif);
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .brand-sub {
+            font-size: 0.66rem;
+            color: var(--text-muted);
+            font-family: var(--sans);
+        }
 
         .nav-links {
             display: flex;
+            align-items: center;
             gap: 2px;
             list-style: none;
             margin: 0;
@@ -72,157 +119,212 @@
 
         .nav-links a {
             display: block;
-            padding: 0.38rem 0.9rem;
-            font-size: 0.82rem;
-            font-weight: 500;
-            color: var(--text-sec);
+            padding: 0.42rem 0.9rem;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-muted);
             text-decoration: none;
-            border-radius: 6px;
-            transition: color 0.18s, background 0.18s;
+            border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+            white-space: nowrap;
         }
 
-        .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
-        .nav-links a.active { color: var(--blue-light); background: rgba(88,166,255,0.08); }
+        .nav-links a:hover { color: var(--primary); background: rgba(0,51,102,0.05); }
 
-        /* ── SHARED CARDS ─────────────────────────────────── */
-        .card-dark {
-            background: var(--surface);
+        .nav-links a.active {
+            color: var(--primary);
+            background: rgba(0,51,102,0.06);
+            border-bottom: 2px solid var(--primary);
+            border-radius: 4px 4px 0 0;
+        }
+
+        .btn-datos {
+            background: var(--primary);
+            color: white !important;
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.15s;
+            margin-left: 0.5rem;
+            letter-spacing: 0.2px;
+        }
+        .btn-datos:hover { background: var(--primary-d); color: white !important; }
+
+        /* ── SHARED COMPONENTS ────────────────────────────── */
+        .card-inst {
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 4px;
+            box-shadow: var(--shadow);
             padding: 1.5rem;
-            transition: border-color 0.2s;
         }
-        .card-dark:hover { border-color: #484f58; }
 
-        /* ── TYPOGRAPHY HELPERS ───────────────────────────── */
-        .mono { font-family: var(--mono); }
-
-        .eyebrow {
+        .section-eyebrow {
             font-family: var(--mono);
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: var(--blue-light);
+            color: var(--primary-l);
+            margin-bottom: 0.4rem;
         }
 
         .section-title {
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: var(--text);
-            margin: 0.25rem 0 0.5rem;
+            font-family: var(--serif);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 0.5rem;
+            line-height: 1.3;
         }
 
-        .section-sub { color: var(--text-sec); font-size: 0.92rem; margin: 0; }
+        .section-sub {
+            color: var(--text-muted);
+            font-size: 0.93rem;
+            margin: 0;
+        }
 
         /* ── KPI ──────────────────────────────────────────── */
         .kpi-value {
             font-family: var(--mono);
-            font-size: 2.6rem;
+            font-size: 2.4rem;
             font-weight: 700;
+            color: var(--primary);
             line-height: 1;
         }
 
         .kpi-label {
-            font-size: 0.68rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-sec);
-            margin-top: 0.5rem;
-        }
-
-        /* ── BUTTONS ──────────────────────────────────────── */
-        .btn-blue {
-            background: var(--blue);
-            color: white !important;
-            border: none;
-            padding: 0.6rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.86rem;
-            text-decoration: none;
-            display: inline-block;
-            transition: background 0.2s, transform 0.15s;
-        }
-        .btn-blue:hover { background: #1d7dd4; transform: translateY(-1px); }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--text) !important;
-            border: 1px solid var(--border);
-            padding: 0.6rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 0.86rem;
-            text-decoration: none;
-            display: inline-block;
-            transition: border-color 0.2s, color 0.2s;
-        }
-        .btn-ghost:hover { border-color: var(--blue-light); color: var(--blue-light) !important; }
-
-        /* ── BADGE ────────────────────────────────────────── */
-        .badge-pill {
-            background: rgba(88,166,255,0.1);
-            color: var(--blue-light);
-            border: 1px solid rgba(88,166,255,0.25);
-            padding: 0.22rem 0.8rem;
-            border-radius: 20px;
-            font-family: var(--mono);
             font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            display: inline-block;
-        }
-
-        /* ── TABLE ────────────────────────────────────────── */
-        .dark-table { width: 100%; border-collapse: collapse; }
-        .dark-table th {
-            background: var(--surface2);
-            color: var(--text-sec);
-            font-size: 0.68rem;
             text-transform: uppercase;
             letter-spacing: 1.2px;
-            padding: 0.6rem 1rem;
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+            font-family: var(--sans);
+        }
+
+        /* ── TABLES ───────────────────────────────────────── */
+        .inst-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+
+        .inst-table th {
+            background: var(--primary);
+            color: white;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.65rem 1rem;
             text-align: left;
-            border-bottom: 1px solid var(--border);
+            font-weight: 600;
             white-space: nowrap;
         }
-        .dark-table td {
-            padding: 0.6rem 1rem;
-            font-size: 0.86rem;
+
+        .inst-table td {
+            padding: 0.55rem 1rem;
             border-bottom: 1px solid var(--border);
             color: var(--text);
         }
-        .dark-table tr:last-child td { border-bottom: none; }
-        .dark-table tr:hover td { background: rgba(255,255,255,0.018); }
+
+        .inst-table tr:nth-child(even) td { background: #F8FAFB; }
+        .inst-table tr:last-child td { border-bottom: none; }
+        .inst-table tr:hover td { background: rgba(0,51,102,0.03); }
+
+        /* ── BUTTONS ──────────────────────────────────────── */
+        .btn-primary-inst {
+            background: var(--primary);
+            color: white !important;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.15s;
+            letter-spacing: 0.2px;
+        }
+        .btn-primary-inst:hover { background: var(--primary-d); }
+
+        .btn-outline-inst {
+            background: transparent;
+            color: var(--primary) !important;
+            border: 1.5px solid var(--primary);
+            padding: 0.6rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.15s, color 0.15s;
+        }
+        .btn-outline-inst:hover {
+            background: var(--primary);
+            color: white !important;
+        }
+
+        /* ── BADGES ───────────────────────────────────────── */
+        .badge-inst {
+            background: rgba(0,51,102,0.08);
+            color: var(--primary);
+            border: 1px solid rgba(0,51,102,0.2);
+            padding: 0.2rem 0.75rem;
+            border-radius: 3px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: var(--mono);
+            display: inline-block;
+        }
+
+        /* ── MONO ─────────────────────────────────────────── */
+        .mono { font-family: var(--mono); }
 
         /* ── COLORS ───────────────────────────────────────── */
-        .c-blue  { color: var(--blue-light); }
-        .c-orange { color: var(--orange); }
-        .c-red   { color: var(--red); }
-        .c-green { color: var(--green); }
-        .c-purple { color: var(--purple); }
-        .c-sec   { color: var(--text-sec); }
+        .c-primary  { color: var(--primary); }
+        .c-secondary { color: var(--secondary); }
+        .c-accent   { color: var(--accent); }
+        .c-success  { color: var(--success); }
+        .c-muted    { color: var(--text-muted); }
 
         /* ── FOOTER ───────────────────────────────────────── */
-        .dark-footer {
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            padding: 2rem;
-            text-align: center;
+        .inst-footer {
+            background: var(--primary-d);
+            color: rgba(255,255,255,0.85);
+            padding: 2.5rem 0 1.5rem;
             margin-top: 5rem;
         }
-        .dark-footer p {
-            color: var(--text-sec);
+
+        .footer-logo-box {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 4px;
+            padding: 0.6rem 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             font-size: 0.78rem;
-            margin: 0.2rem 0;
-            font-family: var(--mono);
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+        }
+
+        .footer-divider {
+            border-color: rgba(255,255,255,0.12);
+            margin: 1.5rem 0 1rem;
+        }
+
+        .footer-legal {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+            text-align: center;
         }
 
         /* ── RESPONSIVE ───────────────────────────────────── */
-        @media (max-width: 768px) {
-            .dark-nav { padding: 0 1rem; }
-            .kpi-value { font-size: 2rem; }
+        @media (max-width: 992px) {
+            .inst-nav { padding: 0 1rem; }
             .nav-links { display: none; }
+            .gov-strip { padding: 0.3rem 1rem; }
         }
 
         {% block extra_styles %}{% endblock %}
@@ -230,24 +332,70 @@
 </head>
 <body>
 
-<nav class="dark-nav">
+<!-- FRANJA INSTITUCIONAL SUPERIOR -->
+<div class="gov-strip">
+    <span>
+        🇨🇴&nbsp; República de Colombia · Concurso <strong>Datos al Ecosistema 2026</strong> · Ministerio de Tecnologías de la Información y las Comunicaciones
+    </span>
+    <a href="https://www.datos.gov.co" target="_blank" rel="noopener">
+        <i class="fa-solid fa-arrow-up-right-from-square me-1" style="font-size:.65rem"></i>datos.gov.co
+    </a>
+</div>
+
+<!-- NAVBAR INSTITUCIONAL -->
+<nav class="inst-nav">
     <a href="/" class="nav-brand">
-        <i class="fa-solid fa-chart-line me-2"></i>Analítica Educativa · Colombia
+        <span class="brand-escudo">🏛️</span>
+        <div class="brand-text">
+            <span class="brand-title">Analítica para la Permanencia Escolar</span>
+            <span class="brand-sub">Universidad Cooperativa de Colombia · Sede Pasto</span>
+        </div>
     </a>
     <ul class="nav-links">
         <li><a href="/" class="{% block nav_home %}{% endblock %}">Inicio</a></li>
         <li><a href="/#dashboard" class="{% block nav_db %}{% endblock %}">Dashboard</a></li>
-        <li><a href="/anova/" class="{% block nav_anova %}{% endblock %}">Análisis ANOVA</a></li>
-        <li><a href="/chatbot/" class="{% block nav_chat %}{% endblock %}">Chatbot IA</a></li>
+        <li><a href="/anova/" class="{% block nav_anova %}{% endblock %}">Análisis Estadístico</a></li>
+        <li><a href="/metodologia/" class="{% block nav_met %}{% endblock %}">Metodología</a></li>
+        <li>
+            <a href="https://www.datos.gov.co/Educaci-n/Tasa-de-Deserci-n-Escolar/ji8i-4anb"
+               target="_blank" rel="noopener" class="btn-datos">
+                Ver en datos.gov.co &nbsp;<i class="fa-solid fa-arrow-up-right-from-square" style="font-size:.7rem"></i>
+            </a>
+        </li>
     </ul>
 </nav>
 
 {% block content %}{% endblock %}
 
-<footer class="dark-footer">
-    <p>SISTEMA NACIONAL DE ANALÍTICA EDUCATIVA · COLOMBIA 2026</p>
-    <p>Universidad Cooperativa de Colombia · Sede Pasto · Datos al Ecosistema 2026</p>
-    <p>Fuente: Ministerio de Educación Nacional · datos.gov.co</p>
+<!-- FOOTER INSTITUCIONAL -->
+<footer class="inst-footer">
+    <div class="container">
+        <div class="row g-3 align-items-center mb-3">
+            <div class="col-md-4">
+                <div class="footer-logo-box">
+                    🏛️&nbsp; Universidad Cooperativa de Colombia
+                </div>
+                <p style="font-size:.75rem;color:rgba(255,255,255,.5);margin:.5rem 0 0">
+                    Sede Pasto · Facultad de Ingeniería
+                </p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="footer-logo-box">
+                    🇨🇴&nbsp; MinTIC · Datos al Ecosistema 2026
+                </div>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="https://www.datos.gov.co" target="_blank" rel="noopener" class="footer-logo-box">
+                    <i class="fa-solid fa-database"></i>&nbsp; datos.gov.co
+                </a>
+            </div>
+        </div>
+        <hr class="footer-divider">
+        <p class="footer-legal">
+            Sistema de Analítica para la Deserción Escolar en Colombia · Datos abiertos del Ministerio de Educación Nacional
+            · © 2026 Universidad Cooperativa de Colombia
+        </p>
+    </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

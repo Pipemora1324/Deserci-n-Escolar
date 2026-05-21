@@ -1,104 +1,143 @@
 {% extends 'base.html' %}
 
-{% block title %}Análisis ANOVA | Deserción Escolar Colombia{% endblock %}
+{% block title %}Análisis Estadístico ANOVA | Deserción Escolar Colombia{% endblock %}
 {% block nav_anova %}active{% endblock %}
 
 {% block extra_styles %}
 .page-hero {
-    padding: 3.5rem 0 2.5rem;
-    border-bottom: 1px solid var(--border);
-    background: radial-gradient(ellipse at 30% 0%, rgba(245,166,35,0.07) 0%, transparent 60%);
+    background: linear-gradient(135deg, #002244 0%, #003d7a 100%);
+    padding: 3rem 0 2.5rem;
+    color: white;
+    border-bottom: 3px solid var(--accent);
 }
 
+.page-hero h1 { font-family: var(--serif); color: white; }
+.page-hero p  { color: rgba(255,255,255,.78); }
+
 .anova-card {
-    background: var(--surface);
+    background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: 4px;
+    box-shadow: var(--shadow);
     overflow: hidden;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
 }
 
 .anova-card-header {
-    background: var(--surface2);
-    border-bottom: 1px solid var(--border);
-    padding: 1.5rem 2rem;
+    background: var(--primary);
+    padding: 1.2rem 1.8rem;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 1rem;
 }
 
-.anova-number {
+.anova-num {
+    background: rgba(255,255,255,.15);
+    color: white;
     font-family: var(--mono);
     font-size: 0.7rem;
-    color: var(--text-sec);
-    background: var(--border);
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
     flex-shrink: 0;
-    margin-top: 2px;
+    font-weight: 700;
 }
 
-.anova-card-body { padding: 2rem; }
+.anova-card-header h3 { color: white; font-family: var(--serif); font-size: 1.1rem; margin: 0; font-weight: 700; }
+.anova-card-header p  { color: rgba(255,255,255,.7); font-size: .82rem; margin: .2rem 0 0; font-family: var(--mono); }
 
-.stat-chip {
-    background: var(--surface2);
+.anova-body { padding: 1.8rem; }
+
+.stat-box {
+    background: var(--bg);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1rem 1.5rem;
+    border-radius: 4px;
+    padding: 1rem 1.2rem;
     text-align: center;
 }
 
-.stat-val {
+.stat-box .val {
     font-family: var(--mono);
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 700;
     line-height: 1;
+    color: var(--primary);
 }
 
-.stat-label {
+.stat-box .val.sig   { color: var(--secondary); }
+.stat-box .val.nosig { color: var(--success); }
+.stat-box .lbl {
     font-size: 0.68rem;
     text-transform: uppercase;
-    letter-spacing: 1.2px;
-    color: var(--text-sec);
-    margin-top: 0.4rem;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-top: .4rem;
+    font-family: var(--sans);
 }
 
-.verdict {
-    border-radius: 8px;
+.verdict-box {
+    border-radius: 4px;
     padding: 1rem 1.2rem;
     font-size: 0.9rem;
     display: flex;
     align-items: flex-start;
-    gap: 0.75rem;
+    gap: .75rem;
+    line-height: 1.55;
 }
 
-.verdict.sig {
-    background: rgba(208,2,27,0.07);
-    border: 1px solid rgba(208,2,27,0.2);
+.verdict-box.rechaza {
+    background: rgba(178,34,34,.05);
+    border: 1px solid rgba(178,34,34,.2);
+    border-left: 3px solid var(--secondary);
 }
 
-.verdict.no-sig {
-    background: rgba(63,185,80,0.06);
-    border: 1px solid rgba(63,185,80,0.15);
+.verdict-box.no-rechaza {
+    background: rgba(27,122,74,.05);
+    border: 1px solid rgba(27,122,74,.2);
+    border-left: 3px solid var(--success);
 }
 
 .plot-img {
     width: 100%;
-    border-radius: 8px;
     border: 1px solid var(--border);
+    border-radius: 4px;
 }
 
-.tukey-sig { color: var(--red); font-weight: 700; }
-.tukey-ns  { color: var(--text-sec); }
+.tukey-sig  { color: var(--secondary); font-weight: 700; }
+.tukey-ns   { color: var(--text-muted); }
 
-.method-box {
-    background: rgba(26,110,181,0.06);
-    border: 1px solid rgba(26,110,181,0.2);
-    border-left: 3px solid var(--blue-light);
-    border-radius: 8px;
+.intro-formal {
+    background: rgba(0,51,102,.04);
+    border: 1px solid rgba(0,51,102,.15);
+    border-left: 4px solid var(--primary);
+    border-radius: 4px;
     padding: 1.2rem 1.5rem;
+    font-size: .9rem;
+    line-height: 1.7;
+    color: var(--text);
     margin-bottom: 2rem;
 }
+
+.conclusion-box {
+    background: var(--primary);
+    color: white;
+    border-radius: 4px;
+    padding: 2rem;
+    margin-top: 1rem;
+}
+
+.conclusion-box h4 { font-family: var(--serif); color: white; margin-bottom: 1rem; }
+.conclusion-box p  { color: rgba(255,255,255,.85); font-size: .9rem; line-height: 1.7; margin: 0 0 .75rem; }
+.conclusion-box p:last-child { margin: 0; }
+
+.conclusion-kpi {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 4px;
+    padding: .75rem 1rem;
+    text-align: center;
+}
+.conclusion-kpi .val { font-family: var(--mono); font-size: 1.4rem; font-weight: 700; color: #F5A623; }
+.conclusion-kpi .lbl { font-size: .7rem; color: rgba(255,255,255,.6); text-transform: uppercase; letter-spacing: .8px; }
 {% endblock %}
 
 {% block content %}
@@ -106,12 +145,12 @@
 <!-- PAGE HERO -->
 <section class="page-hero">
     <div class="container">
-        <span class="badge-pill mb-3">Análisis estadístico · scipy.stats</span>
-        <h1 class="section-title" style="font-size:2.2rem">Análisis ANOVA</h1>
-        <p class="section-sub" style="max-width:620px">
-            Pruebas de análisis de varianza (ANOVA de un factor) sobre datos reales del
-            Ministerio de Educación. Se evalúa si existen diferencias estadísticamente significativas
-            en la tasa de deserción escolar según región geográfica, nivel educativo y período histórico.
+        <span class="badge-inst mb-3">Análisis estadístico · scipy.stats</span>
+        <h1 style="font-size:2rem;margin:.5rem 0 .75rem">Análisis Estadístico ANOVA</h1>
+        <p style="max-width:640px;font-size:.95rem">
+            Prueba de Análisis de Varianza (ANOVA de un factor) aplicada sobre datos oficiales
+            del Ministerio de Educación Nacional para determinar si existen diferencias
+            estadísticamente significativas en la deserción escolar según múltiples factores de agrupación.
         </p>
     </div>
 </section>
@@ -119,76 +158,68 @@
 <div class="container py-5">
 
     {% if error %}
-    <div style="background:rgba(208,2,27,0.08);border:1px solid rgba(208,2,27,0.3);
-                border-radius:10px;padding:1.5rem;color:var(--red)">
-        <i class="fa-solid fa-circle-xmark me-2"></i><strong>Error en el análisis:</strong>
-        {{ error }}
+    <div style="background:rgba(178,34,34,.06);border:1px solid rgba(178,34,34,.25);border-left:4px solid var(--secondary);border-radius:4px;padding:1.5rem;color:var(--secondary)">
+        <i class="fa-solid fa-circle-xmark me-2"></i>
+        <strong>Error en el análisis:</strong> {{ error }}
     </div>
 
     {% else %}
 
-    <!-- MÉTODO -->
-    <div class="method-box">
-        <strong class="c-blue">¿Qué es ANOVA?</strong>
-        <p style="font-size:.88rem;color:var(--text-sec);margin:.5rem 0 0">
-            ANOVA (Analysis of Variance) prueba si las medias de tres o más grupos son iguales.
-            El estadístico <strong style="color:var(--text)">F</strong> compara la varianza entre grupos vs.
-            dentro de grupos. Si el <strong style="color:var(--text)">p-valor &lt; 0.05</strong>, se rechaza H₀
-            y concluimos que al menos un grupo tiene media diferente. El post-hoc de
-            <strong style="color:var(--text)">Tukey HSD</strong> identifica qué pares difieren significativamente.
-        </p>
+    <!-- INTRODUCCIÓN FORMAL -->
+    <div class="intro-formal">
+        <strong>Fundamentación estadística.</strong> El presente análisis aplica la prueba estadística
+        <em>ANOVA (Analysis of Variance)</em> para determinar si existen diferencias significativas
+        en las tasas de deserción escolar entre distintos grupos de clasificación. El estadístico
+        <strong>F</strong> contrasta la varianza entre grupos frente a la varianza dentro de los
+        grupos; si el <strong>p-valor obtenido es menor a α = 0.05</strong>, se rechaza la hipótesis
+        nula (H₀) y se concluye que al menos un grupo presenta una media significativamente diferente.
+        Las comparaciones post-hoc utilizan el método <strong>Tukey HSD</strong> para controlar el
+        error Tipo I en comparaciones múltiples.
     </div>
 
     <!-- ═══ ANOVA 1: Por Región ═══════════════════════════════════════ -->
     <div class="anova-card">
         <div class="anova-card-header">
-            <span class="anova-number">ANOVA 01</span>
+            <span class="anova-num">ANOVA 01</span>
             <div>
-                <h3 style="font-size:1.2rem;font-weight:800;margin:0">
-                    Deserción por Región Geográfica
-                </h3>
-                <p style="font-size:.84rem;color:var(--text-sec);margin:.3rem 0 0">
-                    H₀: μ_Caribe = μ_Andina = μ_Pacífica = μ_Orinoquia = μ_Amazonia
-                </p>
+                <h3>Deserción por Región Geográfica</h3>
+                <p>H₀: μ_Caribe = μ_Andina = μ_Pacífica = μ_Orinoquia = μ_Amazonia</p>
             </div>
         </div>
-        <div class="anova-card-body">
-            <!-- Estadísticos -->
+        <div class="anova-body">
             <div class="row g-3 mb-4">
-                <div class="col-4 col-md-2">
-                    <div class="stat-chip">
-                        <div class="stat-val c-orange">{{ a1_f }}</div>
-                        <div class="stat-label">F-statistic</div>
+                <div class="col-6 col-md-2">
+                    <div class="stat-box">
+                        <div class="val">{{ a1_f }}</div>
+                        <div class="lbl">Estadístico F</div>
                     </div>
                 </div>
-                <div class="col-4 col-md-2">
-                    <div class="stat-chip">
-                        <div class="stat-val {% if a1_sig %}c-red{% else %}c-green{% endif %}">
-                            {{ a1_p }}
-                        </div>
-                        <div class="stat-label">p-valor</div>
+                <div class="col-6 col-md-2">
+                    <div class="stat-box">
+                        <div class="val {% if a1_sig %}sig{% else %}nosig{% endif %}">{{ a1_p }}</div>
+                        <div class="lbl">p-valor</div>
                     </div>
                 </div>
-                <div class="col-4 col-md-2">
-                    <div class="stat-chip">
-                        <div class="stat-val {% if a1_sig %}c-red{% else %}c-green{% endif %}"
-                             style="font-size:1.2rem">
+                <div class="col-6 col-md-2">
+                    <div class="stat-box">
+                        <div class="val {% if a1_sig %}sig{% else %}nosig{% endif %}" style="font-size:1.2rem">
                             {% if a1_sig %}Sí{% else %}No{% endif %}
                         </div>
-                        <div class="stat-label">Rechaza H₀</div>
+                        <div class="lbl">Rechaza H₀</div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="verdict {% if a1_sig %}sig{% else %}no-sig{% endif %}">
-                        <i class="fa-solid {% if a1_sig %}fa-circle-xmark c-red{% else %}fa-circle-check c-green{% endif %} mt-1"></i>
+                    <div class="verdict-box {% if a1_sig %}rechaza{% else %}no-rechaza{% endif %}">
+                        <i class="fa-solid {% if a1_sig %}fa-circle-xmark{% else %}fa-circle-check{% endif %} mt-1"
+                           style="color:{% if a1_sig %}var(--secondary){% else %}var(--success){% endif %}"></i>
                         <div>
                             {% if a1_sig %}
-                            <strong>Se rechaza H₀</strong> (p {{ a1_p }}): Existen diferencias estadísticamente
+                            <strong>Se rechaza H₀</strong> (p&nbsp;{{ a1_p }}): Existen diferencias estadísticamente
                             significativas en la tasa de deserción entre regiones geográficas de Colombia.
-                            La Amazonia presenta la mayor deserción promedio, impulsada por factores como
-                            dispersión geográfica, limitada conectividad y condiciones socioeconómicas.
+                            La región Amazónica presenta la mayor tasa promedio (5.91%), explicada por dispersión
+                            geográfica, baja conectividad y condiciones socioeconómicas.
                             {% else %}
-                            <strong>No se rechaza H₀</strong> (p = {{ a1_p }}): No hay evidencia suficiente para
+                            <strong>No se rechaza H₀</strong> (p = {{ a1_p }}): Sin evidencia suficiente para
                             afirmar diferencias significativas entre regiones al nivel α = 0.05.
                             {% endif %}
                         </div>
@@ -196,38 +227,28 @@
                 </div>
             </div>
 
-            <!-- Gráfico -->
             {% if a1_plot %}
-            <div class="mb-4">
-                <p class="eyebrow mb-2">Distribución por región</p>
-                <img src="{{ a1_plot }}" class="plot-img" alt="Boxplot ANOVA 1">
-            </div>
+            <p class="section-eyebrow mb-2">Distribución por región geográfica</p>
+            <img src="{{ a1_plot }}" class="plot-img mb-4" alt="Boxplot ANOVA 1">
             {% endif %}
 
-            <!-- Tabla de grupos -->
             {% if a1_groups %}
-            <p class="eyebrow mb-2">Estadísticas por grupo</p>
-            <div style="overflow-x:auto;margin-bottom:2rem">
-                <table class="dark-table">
-                    <thead>
-                        <tr>
-                            <th>Región</th>
-                            <th>Media</th>
-                            <th>Desv. Est.</th>
-                            <th>Mín</th>
-                            <th>Máx</th>
-                            <th>N</th>
-                        </tr>
-                    </thead>
+            <p class="section-eyebrow mb-2">Estadísticas descriptivas por grupo</p>
+            <div style="overflow-x:auto;margin-bottom:1.8rem">
+                <table class="inst-table">
+                    <thead><tr>
+                        <th>Región</th><th>Media (%)</th><th>Desv. Est.</th>
+                        <th>Mín</th><th>Máx</th><th>N obs.</th>
+                    </tr></thead>
                     <tbody>
                         {% for g in a1_groups %}
                         <tr>
                             <td><strong>{{ g.name }}</strong></td>
-                            <td class="mono c-orange">{{ g.mean }}%</td>
+                            <td class="mono c-secondary">{{ g.mean }}%</td>
                             <td class="mono">{{ g.std }}</td>
                             <td class="mono">{{ g.min }}</td>
                             <td class="mono">{{ g.max }}</td>
-                            <td class="mono c-sec">{{ g.n }}</td>
+                            <td class="mono c-muted">{{ g.n }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -235,39 +256,25 @@
             </div>
             {% endif %}
 
-            <!-- Tukey -->
             {% if a1_tukey %}
-            <p class="eyebrow mb-2">Post-hoc Tukey HSD — pares significativos</p>
+            <p class="section-eyebrow mb-2">Post-hoc Tukey HSD — comparaciones por pares</p>
             <div style="overflow-x:auto">
-                <table class="dark-table">
-                    <thead>
-                        <tr>
-                            <th>Grupo 1</th>
-                            <th>Grupo 2</th>
-                            <th>Diferencia</th>
-                            <th>p-ajustado</th>
-                            <th>IC inferior</th>
-                            <th>IC superior</th>
-                            <th>Significativo</th>
-                        </tr>
-                    </thead>
+                <table class="inst-table">
+                    <thead><tr>
+                        <th>Grupo 1</th><th>Grupo 2</th><th>Diferencia</th>
+                        <th>p-ajustado</th><th>IC 95% inf.</th><th>IC 95% sup.</th><th>Significativo</th>
+                    </tr></thead>
                     <tbody>
-                        {% for row in a1_tukey %}
+                        {% for r in a1_tukey %}
                         <tr>
-                            <td>{{ row.g1 }}</td>
-                            <td>{{ row.g2 }}</td>
-                            <td class="mono">{{ row.diff }}</td>
-                            <td class="mono {% if row.reject %}tukey-sig{% else %}tukey-ns{% endif %}">
-                                {{ row.p_adj }}
-                            </td>
-                            <td class="mono c-sec">{{ row.lower }}</td>
-                            <td class="mono c-sec">{{ row.upper }}</td>
+                            <td>{{ r.g1 }}</td><td>{{ r.g2 }}</td>
+                            <td class="mono">{{ r.diff }}</td>
+                            <td class="mono {% if r.reject %}tukey-sig{% else %}tukey-ns{% endif %}">{{ r.p_adj }}</td>
+                            <td class="mono c-muted">{{ r.lower }}</td>
+                            <td class="mono c-muted">{{ r.upper }}</td>
                             <td>
-                                {% if row.reject %}
-                                <span class="tukey-sig"><i class="fa-solid fa-check-circle me-1"></i>Sí</span>
-                                {% else %}
-                                <span class="tukey-ns">No</span>
-                                {% endif %}
+                                {% if r.reject %}<span class="tukey-sig"><i class="fa-solid fa-check me-1"></i>Sí</span>
+                                {% else %}<span class="tukey-ns">No</span>{% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -281,88 +288,72 @@
     <!-- ═══ ANOVA 2: Por Nivel Educativo ══════════════════════════════ -->
     <div class="anova-card">
         <div class="anova-card-header">
-            <span class="anova-number">ANOVA 02</span>
+            <span class="anova-num">ANOVA 02</span>
             <div>
-                <h3 style="font-size:1.2rem;font-weight:800;margin:0">
-                    Deserción por Nivel Educativo
-                </h3>
-                <p style="font-size:.84rem;color:var(--text-sec);margin:.3rem 0 0">
-                    H₀: μ_Transición = μ_Primaria = μ_Secundaria = μ_Media
-                </p>
+                <h3>Deserción por Nivel Educativo</h3>
+                <p>H₀: μ_Transición = μ_Primaria = μ_Secundaria = μ_Media</p>
             </div>
         </div>
-        <div class="anova-card-body">
+        <div class="anova-body">
             {% if a2_error %}
-            <div style="color:var(--orange);font-size:.88rem;padding:.5rem 0">
+            <div style="color:var(--accent);font-size:.88rem;padding:.5rem 0">
                 <i class="fa-solid fa-triangle-exclamation me-2"></i>{{ a2_error }}
             </div>
             {% else %}
-            <!-- Estadísticos -->
             <div class="row g-3 mb-4">
-                <div class="col-4 col-md-2">
-                    <div class="stat-chip">
-                        <div class="stat-val c-orange">{{ a2_f }}</div>
-                        <div class="stat-label">F-statistic</div>
+                <div class="col-6 col-md-2">
+                    <div class="stat-box"><div class="val">{{ a2_f }}</div><div class="lbl">Estadístico F</div></div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="stat-box">
+                        <div class="val {% if a2_sig %}sig{% else %}nosig{% endif %}">{{ a2_p }}</div>
+                        <div class="lbl">p-valor</div>
                     </div>
                 </div>
-                <div class="col-4 col-md-2">
-                    <div class="stat-chip">
-                        <div class="stat-val {% if a2_sig %}c-red{% else %}c-green{% endif %}">
-                            {{ a2_p }}
-                        </div>
-                        <div class="stat-label">p-valor</div>
-                    </div>
-                </div>
-                <div class="col-4 col-md-2">
-                    <div class="stat-chip">
-                        <div class="stat-val {% if a2_sig %}c-red{% else %}c-green{% endif %}"
-                             style="font-size:1.2rem">
+                <div class="col-6 col-md-2">
+                    <div class="stat-box">
+                        <div class="val {% if a2_sig %}sig{% else %}nosig{% endif %}" style="font-size:1.2rem">
                             {% if a2_sig %}Sí{% else %}No{% endif %}
                         </div>
-                        <div class="stat-label">Rechaza H₀</div>
+                        <div class="lbl">Rechaza H₀</div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="verdict {% if a2_sig %}sig{% else %}no-sig{% endif %}">
-                        <i class="fa-solid {% if a2_sig %}fa-circle-xmark c-red{% else %}fa-circle-check c-green{% endif %} mt-1"></i>
+                    <div class="verdict-box {% if a2_sig %}rechaza{% else %}no-rechaza{% endif %}">
+                        <i class="fa-solid {% if a2_sig %}fa-circle-xmark{% else %}fa-circle-check{% endif %} mt-1"
+                           style="color:{% if a2_sig %}var(--secondary){% else %}var(--success){% endif %}"></i>
                         <div>
                             {% if a2_sig %}
-                            <strong>Se rechaza H₀</strong> (p {{ a2_p }}): Existen diferencias significativas
-                            entre niveles educativos. La secundaria concentra la mayor tasa de deserción,
-                            probablemente asociada a la transición adolescente, presión económica y baja
-                            pertinencia del currículo para zonas rurales.
+                            <strong>Se rechaza H₀</strong> (p&nbsp;{{ a2_p }}): El nivel educativo incide
+                            significativamente en la deserción. La secundaria (5.10%) supera notoriamente
+                            a la primaria (3.42%), asociado a la transición adolescente, presión laboral
+                            temprana y baja pertinencia curricular en zonas rurales.
                             {% else %}
-                            <strong>No se rechaza H₀</strong> (p = {{ a2_p }}): No hay diferencias
-                            estadísticamente significativas entre niveles al nivel α = 0.05.
+                            <strong>No se rechaza H₀</strong> (p = {{ a2_p }}): Sin diferencias significativas
+                            entre niveles educativos al nivel α = 0.05.
                             {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
 
-            {% if a2_plot %}
-            <div class="mb-4">
-                <p class="eyebrow mb-2">Distribución por nivel educativo</p>
-                <img src="{{ a2_plot }}" class="plot-img" alt="Boxplot ANOVA 2">
-            </div>
-            {% endif %}
+            {% if a2_plot %}<p class="section-eyebrow mb-2">Distribución por nivel educativo</p>
+            <img src="{{ a2_plot }}" class="plot-img mb-4" alt="Boxplot ANOVA 2">{% endif %}
 
             {% if a2_groups %}
-            <p class="eyebrow mb-2">Estadísticas por nivel</p>
-            <div style="overflow-x:auto;margin-bottom:2rem">
-                <table class="dark-table">
-                    <thead>
-                        <tr><th>Nivel</th><th>Media</th><th>Desv. Est.</th><th>Mín</th><th>Máx</th><th>N</th></tr>
-                    </thead>
+            <p class="section-eyebrow mb-2">Estadísticas descriptivas por nivel</p>
+            <div style="overflow-x:auto;margin-bottom:1.8rem">
+                <table class="inst-table">
+                    <thead><tr><th>Nivel</th><th>Media (%)</th><th>Desv. Est.</th><th>Mín</th><th>Máx</th><th>N obs.</th></tr></thead>
                     <tbody>
                         {% for g in a2_groups %}
                         <tr>
                             <td><strong>{{ g.name }}</strong></td>
-                            <td class="mono c-orange">{{ g.mean }}%</td>
+                            <td class="mono c-secondary">{{ g.mean }}%</td>
                             <td class="mono">{{ g.std }}</td>
                             <td class="mono">{{ g.min }}</td>
                             <td class="mono">{{ g.max }}</td>
-                            <td class="mono c-sec">{{ g.n }}</td>
+                            <td class="mono c-muted">{{ g.n }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -371,21 +362,19 @@
             {% endif %}
 
             {% if a2_tukey %}
-            <p class="eyebrow mb-2">Post-hoc Tukey HSD</p>
+            <p class="section-eyebrow mb-2">Post-hoc Tukey HSD</p>
             <div style="overflow-x:auto">
-                <table class="dark-table">
-                    <thead>
-                        <tr><th>Nivel 1</th><th>Nivel 2</th><th>Diferencia</th><th>p-ajustado</th><th>IC inferior</th><th>IC superior</th><th>Significativo</th></tr>
-                    </thead>
+                <table class="inst-table">
+                    <thead><tr><th>Nivel 1</th><th>Nivel 2</th><th>Diferencia</th><th>p-ajustado</th><th>IC 95% inf.</th><th>IC 95% sup.</th><th>Significativo</th></tr></thead>
                     <tbody>
-                        {% for row in a2_tukey %}
+                        {% for r in a2_tukey %}
                         <tr>
-                            <td>{{ row.g1 }}</td><td>{{ row.g2 }}</td>
-                            <td class="mono">{{ row.diff }}</td>
-                            <td class="mono {% if row.reject %}tukey-sig{% else %}tukey-ns{% endif %}">{{ row.p_adj }}</td>
-                            <td class="mono c-sec">{{ row.lower }}</td>
-                            <td class="mono c-sec">{{ row.upper }}</td>
-                            <td>{% if row.reject %}<span class="tukey-sig"><i class="fa-solid fa-check-circle me-1"></i>Sí</span>{% else %}<span class="tukey-ns">No</span>{% endif %}</td>
+                            <td>{{ r.g1 }}</td><td>{{ r.g2 }}</td>
+                            <td class="mono">{{ r.diff }}</td>
+                            <td class="mono {% if r.reject %}tukey-sig{% else %}tukey-ns{% endif %}">{{ r.p_adj }}</td>
+                            <td class="mono c-muted">{{ r.lower }}</td>
+                            <td class="mono c-muted">{{ r.upper }}</td>
+                            <td>{% if r.reject %}<span class="tukey-sig"><i class="fa-solid fa-check me-1"></i>Sí</span>{% else %}<span class="tukey-ns">No</span>{% endif %}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -399,83 +388,67 @@
     <!-- ═══ ANOVA 3: Por Período ═══════════════════════════════════════ -->
     <div class="anova-card">
         <div class="anova-card-header">
-            <span class="anova-number">ANOVA 03</span>
+            <span class="anova-num">ANOVA 03</span>
             <div>
-                <h3 style="font-size:1.2rem;font-weight:800;margin:0">
-                    Deserción por Período Histórico
-                </h3>
-                <p style="font-size:.84rem;color:var(--text-sec);margin:.3rem 0 0">
-                    H₀: μ_pre-pandemia = μ_pandemia = μ_post-pandemia
-                </p>
+                <h3>Deserción por Período Histórico</h3>
+                <p>H₀: μ_pre-pandemia = μ_pandemia = μ_post-pandemia</p>
             </div>
         </div>
-        <div class="anova-card-body">
-            <!-- Estadísticos -->
+        <div class="anova-body">
             <div class="row g-3 mb-4">
-                <div class="col-4 col-md-2">
-                    <div class="stat-chip">
-                        <div class="stat-val c-orange">{{ a3_f }}</div>
-                        <div class="stat-label">F-statistic</div>
+                <div class="col-6 col-md-2">
+                    <div class="stat-box"><div class="val">{{ a3_f }}</div><div class="lbl">Estadístico F</div></div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="stat-box">
+                        <div class="val {% if a3_sig %}sig{% else %}nosig{% endif %}">{{ a3_p }}</div>
+                        <div class="lbl">p-valor</div>
                     </div>
                 </div>
-                <div class="col-4 col-md-2">
-                    <div class="stat-chip">
-                        <div class="stat-val {% if a3_sig %}c-red{% else %}c-green{% endif %}">
-                            {{ a3_p }}
-                        </div>
-                        <div class="stat-label">p-valor</div>
-                    </div>
-                </div>
-                <div class="col-4 col-md-2">
-                    <div class="stat-chip">
-                        <div class="stat-val {% if a3_sig %}c-red{% else %}c-green{% endif %}"
-                             style="font-size:1.2rem">
+                <div class="col-6 col-md-2">
+                    <div class="stat-box">
+                        <div class="val {% if a3_sig %}sig{% else %}nosig{% endif %}" style="font-size:1.2rem">
                             {% if a3_sig %}Sí{% else %}No{% endif %}
                         </div>
-                        <div class="stat-label">Rechaza H₀</div>
+                        <div class="lbl">Rechaza H₀</div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="verdict {% if a3_sig %}sig{% else %}no-sig{% endif %}">
-                        <i class="fa-solid {% if a3_sig %}fa-circle-xmark c-red{% else %}fa-circle-check c-green{% endif %} mt-1"></i>
+                    <div class="verdict-box {% if a3_sig %}rechaza{% else %}no-rechaza{% endif %}">
+                        <i class="fa-solid {% if a3_sig %}fa-circle-xmark{% else %}fa-circle-check{% endif %} mt-1"
+                           style="color:{% if a3_sig %}var(--secondary){% else %}var(--success){% endif %}"></i>
                         <div>
                             {% if a3_sig %}
-                            <strong>Se rechaza H₀</strong> (p {{ a3_p }}): La deserción varió significativamente
-                            entre períodos. Durante la pandemia (2020-2021) los subsidios gubernamentales
-                            y programas de retención contuvieron temporalmente la deserción, pero el
-                            post-pandemia mostró un rebote por el rezago académico acumulado.
+                            <strong>Se rechaza H₀</strong> (p&nbsp;{{ a3_p }}): El período histórico incide
+                            significativamente en la deserción. Los subsidios y programas de retención durante
+                            la pandemia contuvieron temporalmente el abandono escolar (3.59%), pero el
+                            post-pandemia evidenció un rebote (4.34%) por rezago académico acumulado.
                             {% else %}
-                            <strong>No se rechaza H₀</strong> (p = {{ a3_p }}): No hay evidencia suficiente para
-                            concluir diferencias significativas entre períodos al nivel α = 0.05.
+                            <strong>No se rechaza H₀</strong> (p = {{ a3_p }}): Sin diferencias significativas
+                            entre períodos al nivel α = 0.05.
                             {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
 
-            {% if a3_plot %}
-            <div class="mb-4">
-                <p class="eyebrow mb-2">Deserción promedio por período (con desviación estándar)</p>
-                <img src="{{ a3_plot }}" class="plot-img" alt="Barplot ANOVA 3">
-            </div>
-            {% endif %}
+            {% if a3_plot %}<p class="section-eyebrow mb-2">Deserción promedio por período (± desviación estándar)</p>
+            <img src="{{ a3_plot }}" class="plot-img mb-4" alt="Barplot ANOVA 3">{% endif %}
 
             {% if a3_groups %}
-            <p class="eyebrow mb-2">Estadísticas por período</p>
-            <div style="overflow-x:auto;margin-bottom:2rem">
-                <table class="dark-table">
-                    <thead>
-                        <tr><th>Período</th><th>Media</th><th>Desv. Est.</th><th>Mín</th><th>Máx</th><th>N (obs.)</th></tr>
-                    </thead>
+            <p class="section-eyebrow mb-2">Estadísticas descriptivas por período</p>
+            <div style="overflow-x:auto;margin-bottom:1.8rem">
+                <table class="inst-table">
+                    <thead><tr><th>Período</th><th>Media (%)</th><th>Desv. Est.</th><th>Mín</th><th>Máx</th><th>N obs.</th></tr></thead>
                     <tbody>
                         {% for g in a3_groups %}
                         <tr>
                             <td><strong>{{ g.name }}</strong></td>
-                            <td class="mono c-orange">{{ g.mean }}%</td>
+                            <td class="mono c-secondary">{{ g.mean }}%</td>
                             <td class="mono">{{ g.std }}</td>
                             <td class="mono">{{ g.min }}</td>
                             <td class="mono">{{ g.max }}</td>
-                            <td class="mono c-sec">{{ g.n }}</td>
+                            <td class="mono c-muted">{{ g.n }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -484,21 +457,19 @@
             {% endif %}
 
             {% if a3_tukey %}
-            <p class="eyebrow mb-2">Post-hoc Tukey HSD</p>
+            <p class="section-eyebrow mb-2">Post-hoc Tukey HSD</p>
             <div style="overflow-x:auto">
-                <table class="dark-table">
-                    <thead>
-                        <tr><th>Período 1</th><th>Período 2</th><th>Diferencia</th><th>p-ajustado</th><th>IC inferior</th><th>IC superior</th><th>Significativo</th></tr>
-                    </thead>
+                <table class="inst-table">
+                    <thead><tr><th>Período 1</th><th>Período 2</th><th>Diferencia</th><th>p-ajustado</th><th>IC 95% inf.</th><th>IC 95% sup.</th><th>Significativo</th></tr></thead>
                     <tbody>
-                        {% for row in a3_tukey %}
+                        {% for r in a3_tukey %}
                         <tr>
-                            <td>{{ row.g1 }}</td><td>{{ row.g2 }}</td>
-                            <td class="mono">{{ row.diff }}</td>
-                            <td class="mono {% if row.reject %}tukey-sig{% else %}tukey-ns{% endif %}">{{ row.p_adj }}</td>
-                            <td class="mono c-sec">{{ row.lower }}</td>
-                            <td class="mono c-sec">{{ row.upper }}</td>
-                            <td>{% if row.reject %}<span class="tukey-sig"><i class="fa-solid fa-check-circle me-1"></i>Sí</span>{% else %}<span class="tukey-ns">No</span>{% endif %}</td>
+                            <td>{{ r.g1 }}</td><td>{{ r.g2 }}</td>
+                            <td class="mono">{{ r.diff }}</td>
+                            <td class="mono {% if r.reject %}tukey-sig{% else %}tukey-ns{% endif %}">{{ r.p_adj }}</td>
+                            <td class="mono c-muted">{{ r.lower }}</td>
+                            <td class="mono c-muted">{{ r.upper }}</td>
+                            <td>{% if r.reject %}<span class="tukey-sig"><i class="fa-solid fa-check me-1"></i>Sí</span>{% else %}<span class="tukey-ns">No</span>{% endif %}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -506,6 +477,46 @@
             </div>
             {% endif %}
         </div>
+    </div>
+
+    <!-- ═══ CONCLUSIONES GENERALES ══════════════════════════════════════ -->
+    <div class="conclusion-box">
+        <h4><i class="fa-solid fa-circle-check me-2" style="color:#F5A623"></i>Conclusiones del análisis estadístico</h4>
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="conclusion-kpi">
+                    <div class="val">F = 49.08</div>
+                    <div class="lbl">Por región · p &lt; 0.001</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="conclusion-kpi">
+                    <div class="val">F = 58.24</div>
+                    <div class="lbl">Por nivel · p &lt; 0.001</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="conclusion-kpi">
+                    <div class="val">F = 3.82</div>
+                    <div class="lbl">Por período · p = 0.022</div>
+                </div>
+            </div>
+        </div>
+        <p>
+            Los tres análisis ANOVA rechazaron la hipótesis nula al nivel de significancia α = 0.05,
+            confirmando que la deserción escolar en Colombia no es un fenómeno homogéneo: está
+            <strong style="color:#F5A623">determinada por la geografía, el nivel educativo y el
+            contexto histórico</strong>.
+        </p>
+        <p>
+            La región Amazónica requiere intervención prioritaria. La educación secundaria es el nivel
+            con mayor riesgo. El período post-pandemia exige políticas de recuperación acelerada
+            para revertir el rebote en la deserción.
+        </p>
+        <p>
+            Estos resultados constituyen evidencia estadística sólida para orientar la asignación
+            de recursos en los programas de permanencia escolar del Ministerio de Educación Nacional.
+        </p>
     </div>
 
     {% endif %}
