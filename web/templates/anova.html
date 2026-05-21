@@ -106,14 +106,14 @@
 .tukey-ns   { color: var(--text-muted); }
 
 .intro-formal {
-    background: rgba(0,51,102,.04);
-    border: 1px solid rgba(0,51,102,.15);
+    background: var(--primary-soft, #EBF0FB);
+    border: 1px solid rgba(0,53,128,0.18);
     border-left: 4px solid var(--primary);
-    border-radius: 4px;
-    padding: 1.2rem 1.5rem;
+    border-radius: var(--radius, 8px);
+    padding: 1.3rem 1.5rem;
     font-size: .9rem;
     line-height: 1.7;
-    color: var(--text);
+    color: var(--text-main);
     margin-bottom: 2rem;
 }
 
@@ -165,16 +165,27 @@
 
     {% else %}
 
-    <!-- INTRODUCCIÓN FORMAL -->
+    <!-- INTRODUCCIÓN METODOLÓGICA -->
     <div class="intro-formal">
-        <strong>Fundamentación estadística.</strong> El presente análisis aplica la prueba estadística
-        <em>ANOVA (Analysis of Variance)</em> para determinar si existen diferencias significativas
-        en las tasas de deserción escolar entre distintos grupos de clasificación. El estadístico
-        <strong>F</strong> contrasta la varianza entre grupos frente a la varianza dentro de los
-        grupos; si el <strong>p-valor obtenido es menor a α = 0.05</strong>, se rechaza la hipótesis
-        nula (H₀) y se concluye que al menos un grupo presenta una media significativamente diferente.
-        Las comparaciones post-hoc utilizan el método <strong>Tukey HSD</strong> para controlar el
-        error Tipo I en comparaciones múltiples.
+        <strong style="font-size:.8rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:.6rem;color:var(--primary)">
+            Introducción metodológica
+        </strong>
+        El <strong>análisis de varianza (ANOVA)</strong> permite determinar si existen diferencias
+        estadísticamente significativas entre las medias de tres o más grupos independientes.
+        El estadístico F contrasta la varianza entre grupos frente a la varianza dentro de los grupos.
+        <div style="margin-top:.75rem;padding:.75rem 1rem;background:white;border-radius:6px;border:1px solid var(--border)">
+            <strong>Criterio de decisión: nivel de significancia α = 0.05</strong><br>
+            <span style="font-size:.88rem">
+            • Si <span class="mono">p-valor &lt; 0.05</span>: se rechaza H₀ → hay diferencias estadísticamente significativas<br>
+            • Si <span class="mono">p-valor ≥ 0.05</span>: no se rechaza H₀ → no hay evidencia suficiente de diferencias
+            </span>
+        </div>
+        <p style="margin:.75rem 0 0;font-size:.9rem;color:var(--text-muted)">
+            Los tres análisis utilizan datos reales de <strong style="color:var(--text-main)">462 registros</strong>
+            del Ministerio de Educación Nacional (2011-2024). Para las comparaciones múltiples post-hoc
+            se aplica la <strong style="color:var(--text-main)">prueba de Tukey HSD</strong>, que controla
+            el error Tipo I manteniendo la tasa global ≤ α = 0.05.
+        </p>
     </div>
 
     <!-- ═══ ANOVA 1: Por Región ═══════════════════════════════════════ -->
@@ -481,7 +492,10 @@
 
     <!-- ═══ CONCLUSIONES GENERALES ══════════════════════════════════════ -->
     <div class="conclusion-box">
-        <h4><i class="fa-solid fa-circle-check me-2" style="color:#F5A623"></i>Conclusiones del análisis estadístico</h4>
+        <h4>
+            <i class="fa-solid fa-circle-check me-2" style="color:#FFC72C"></i>
+            Conclusiones generales
+        </h4>
         <div class="row g-3 mb-4">
             <div class="col-md-4">
                 <div class="conclusion-kpi">
@@ -502,20 +516,26 @@
                 </div>
             </div>
         </div>
-        <p>
-            Los tres análisis ANOVA rechazaron la hipótesis nula al nivel de significancia α = 0.05,
-            confirmando que la deserción escolar en Colombia no es un fenómeno homogéneo: está
-            <strong style="color:#F5A623">determinada por la geografía, el nivel educativo y el
-            contexto histórico</strong>.
+        <p style="color:rgba(255,255,255,.5);font-size:.8rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:.75rem">
+            Los tres análisis ANOVA sobre 462 registros reales (MEN, 2011-2024) permiten concluir:
         </p>
         <p>
-            La región Amazónica requiere intervención prioritaria. La educación secundaria es el nivel
-            con mayor riesgo. El período post-pandemia exige políticas de recuperación acelerada
-            para revertir el rebote en la deserción.
+            <strong style="color:#FFC72C">1.</strong>
+            Existen diferencias significativas por región geográfica (F=49.08, p&lt;0.001).
+            La Amazonia presenta la mayor deserción (5.91%), siendo estadísticamente diferente
+            de todas las demás regiones según el test de Tukey HSD.
         </p>
         <p>
-            Estos resultados constituyen evidencia estadística sólida para orientar la asignación
-            de recursos en los programas de permanencia escolar del Ministerio de Educación Nacional.
+            <strong style="color:#FFC72C">2.</strong>
+            El nivel educativo determina el riesgo de deserción (F=58.24, p&lt;0.001).
+            Secundaria (5.10%) es el nivel más crítico, seguido de Transición (4.12%).
+            Primaria tiene la menor tasa (3.42%).
+        </p>
+        <p>
+            <strong style="color:#FFC72C">3.</strong>
+            El período histórico muestra un efecto pandemia significativo (F=3.82, p=0.022).
+            La deserción bajó durante 2020-2021 (3.59%) y repuntó en el período post-pandemia (4.34%),
+            requiriendo políticas urgentes de recuperación y retención escolar.
         </p>
     </div>
 
